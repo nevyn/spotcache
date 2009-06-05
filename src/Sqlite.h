@@ -9,6 +9,7 @@
 #include <string>
 using std::string;
 #include <stdexcept>
+#include <memory>
 
 #include <sqlite3.h>
 
@@ -22,24 +23,35 @@ public:
 	};
 	
 	class Statement {
+		friend class Sqlite;
 	public:
-		Statement(Sqlite &parent);
+		typedef std::auto_ptr<Statement> Ptr;
+		
 		~Statement();
-		void prepare(const string &statement);
 		// Bind values to parameters. i is the index of the parameter.
 		void bind(int i, const void*); // blob
 		void bind(int i, string); // text
 		void bind(int i, int); // int
 		
 		void reset();
-		void step();
+		int step();
+		int stepUntilNotBusy(int tryCount = 10);
 	protected:
-		Statement(Statement &other) {}; // fix later
+		Statement(Sqlite &parent);
+		// Prepares the first statement in 'statement' and returns
+		// the rest of the string.
+		string prepare(const string &statement);
+
 		sqlite3_stmt *stmt;
 		Sqlite &parent;
 	};
 	
-	
+	// Prepares the statement in the string 'statement'. If there are
+	// several statements in the string, all but the first are ignored.
+	Statement::Ptr prepareFirst(const string &statement);
+
+	// Runs the first statement of a string, ignoring the return value.
+	void run(const string &statement);
 	
 	Sqlite(const string &path);
 	~Sqlite();

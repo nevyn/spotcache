@@ -45,7 +45,7 @@ protected:
 	const vector<uint8_t> key;
 	
 	Sqlite db;
-	Sqlite::Statement hasStmt, readStmt, writeStmt;
+	Sqlite::Statement::Ptr hasStmt, readStmt, writeStmt;
 	
 	
 };

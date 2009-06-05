@@ -21,10 +21,11 @@ static string schema =
 
 SqliteCache::
 SqliteCache(const string &path, const vector<uint8_t> &encryption_key)
-: db(path), key(encryption_key), hasStmt(db), readStmt(db), writeStmt(db)
+: db(path), key(encryption_key)
 {
-	hasStmt.prepare("select count(*) from cache where object_id = ?;");
-	readStmt.prepare("select blob from cache where object_id = ?;");
+	db.run(schema);
+	hasStmt = db.prepareFirst("select count(object_id), completed from cache where object_id = ?;");
+	//readStmt.prepare("select blob from cache where object_id = ?;");
 	
 }
 
