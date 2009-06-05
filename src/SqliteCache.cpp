@@ -21,21 +21,16 @@ static string schema =
 
 SqliteCache::
 SqliteCache(const string &path, const vector<uint8_t> &encryption_key)
-: key(encryption_key)
+: db(path), key(encryption_key), hasStmt(db), readStmt(db), writeStmt(db)
 {
-	int err = sqlite3_open(path.c_str(), &db);
-	if(err != SQLITE_OK) {
-		SqliteConstructionError exc = SqliteConstructionError(sqlite3_errmsg(db));
-		exc.errorCode = err;
-		sqlite3_close(db);
-		throw exc;
-	}
+	hasStmt.prepare("select count(*) from cache where object_id = ?;");
+	readStmt.prepare("select blob from cache where object_id = ?;");
+	
 }
 
 SqliteCache::
 ~SqliteCache()
 {
-	sqlite3_close(db);
 }
 
 bool
@@ -65,7 +60,10 @@ writeObject(const ObjectId &obj_id,
 						const vector<uint8_t>	 &value,
 						bool completesInsertion)
 {
-	keyify(obj_id);
+	string lookupKey = keyify(obj_id);
+	
+	
+	
 	return false;
 }
 

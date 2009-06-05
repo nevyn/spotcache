@@ -1,0 +1,4 @@
+.DS_Store
+build
+SpotCache.xcodeproj/*.mode2v3
+SpotCache.xcodeproj/*.pbxuser

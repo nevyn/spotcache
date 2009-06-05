@@ -11,18 +11,12 @@
  */
 
 #include "Cache.h"
-#include <sqlite3.h>
+#include "Sqlite.h"
 
 class SqliteCache : public Cache {
 	friend Cache *createCache(const string &path, const vector<uint8_t> &encryption_key); 
 public:
 	// --- Types ---
-	class SqliteConstructionError : public std::runtime_error {
-	public:
-		SqliteConstructionError(string err) : std::runtime_error(err) {}
-		
-		int errorCode;
-	};
 	
 	// --- Methods ---
 	~SqliteCache();
@@ -40,14 +34,19 @@ public:
 	
 	// --- Implementation detail methods --
 protected:
+	/// Salts the obj_id with this->key and hashes it. This is what will be used
+	/// to do lookups in the db. The end result is that running this Cache
+	/// instance with the wrong key yields a seemingly empty database.
 	string keyify(const ObjectId &obj_id);
+	SqliteCache(const string &path, const vector<uint8_t> &encryption_key);
 	
 	// --- Ivars ---
 protected:
-	SqliteCache(const string &path, const vector<uint8_t> &encryption_key);
-	sqlite3 *db;
 	const vector<uint8_t> key;
-
+	
+	Sqlite db;
+	Sqlite::Statement hasStmt, readStmt, writeStmt;
+	
 	
 };
 
