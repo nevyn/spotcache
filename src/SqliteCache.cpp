@@ -138,7 +138,10 @@ void
 SqliteCache::
 setMaxSize(uint64_t max_size)
 {
-	;
+	if(0 == max_size)
+		db.run("delete from cache;");
+	
+	// TODO
 }
 
 uint64_t

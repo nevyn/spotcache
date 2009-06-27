@@ -7,46 +7,37 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		050330290FD4663F0034612D /* Cache.cc in Sources */ = {isa = PBXBuildFile; fileRef = 050330270FD4663F0034612D /* Cache.cc */; };
-		054195520FD869F2009BA8C6 /* libcrypto.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 054195510FD869F2009BA8C6 /* libcrypto.dylib */; };
-		054195760FD87537009BA8C6 /* Sqlite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 054195750FD87537009BA8C6 /* Sqlite.cpp */; };
-		05FFEB4C0FD6F10E007558B2 /* test.cc in Sources */ = {isa = PBXBuildFile; fileRef = 05FFEB4B0FD6F10E007558B2 /* test.cc */; };
-		05FFEB570FD6F222007558B2 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 05FFEB560FD6F222007558B2 /* libsqlite3.dylib */; };
-		05FFEB5C0FD6F269007558B2 /* SqliteCache.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05FFEB5B0FD6F269007558B2 /* SqliteCache.cpp */; };
+		051465690FF5D4800011052B /* tests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 051465680FF5D4800011052B /* tests.cpp */; };
+		051465740FF5D4DD0011052B /* Cache.cc in Sources */ = {isa = PBXBuildFile; fileRef = 050330270FD4663F0034612D /* Cache.cc */; };
+		051465750FF5D4DD0011052B /* SqliteCache.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05FFEB5B0FD6F269007558B2 /* SqliteCache.cpp */; };
+		051465760FF5D4DD0011052B /* Sqlite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 054195750FD87537009BA8C6 /* Sqlite.cpp */; };
+		051465790FF5D4E80011052B /* libcrypto.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 054195510FD869F2009BA8C6 /* libcrypto.dylib */; };
+		0514657A0FF5D4E80011052B /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 05FFEB560FD6F222007558B2 /* libsqlite3.dylib */; };
 /* End PBXBuildFile section */
-
-/* Begin PBXCopyFilesBuildPhase section */
-		8DD76F690486A84900D96B5E /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 8;
-			dstPath = /usr/share/man/man1/;
-			dstSubfolderSpec = 0;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 1;
-		};
-/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		050330270FD4663F0034612D /* Cache.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Cache.cc; sourceTree = "<group>"; };
 		050330280FD4663F0034612D /* Cache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Cache.h; sourceTree = "<group>"; };
+		051465130FF5D2270011052B /* test */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = test; sourceTree = BUILT_PRODUCTS_DIR; };
+		051465530FF5D3DC0011052B /* SqliteDbSuite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SqliteDbSuite.h; sourceTree = "<group>"; };
+		051465680FF5D4800011052B /* tests.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tests.cpp; sourceTree = "<group>"; };
+		051465FF0FF5E0F60011052B /* SqliteTableSuite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SqliteTableSuite.h; sourceTree = "<group>"; };
+		0514662F0FF5EFD60011052B /* SqliteCacheSuite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SqliteCacheSuite.h; sourceTree = "<group>"; };
 		054195510FD869F2009BA8C6 /* libcrypto.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcrypto.dylib; path = /usr/lib/libcrypto.dylib; sourceTree = "<absolute>"; };
 		054195740FD87537009BA8C6 /* Sqlite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Sqlite.h; sourceTree = "<group>"; };
 		054195750FD87537009BA8C6 /* Sqlite.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Sqlite.cpp; sourceTree = "<group>"; };
-		05FFEB4B0FD6F10E007558B2 /* test.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test.cc; sourceTree = "<group>"; };
 		05FFEB560FD6F222007558B2 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = /usr/lib/libsqlite3.dylib; sourceTree = "<absolute>"; };
 		05FFEB5A0FD6F269007558B2 /* SqliteCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SqliteCache.h; sourceTree = "<group>"; };
 		05FFEB5B0FD6F269007558B2 /* SqliteCache.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SqliteCache.cpp; sourceTree = "<group>"; };
-		8DD76F6C0486A84900D96B5E /* SpotCache */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = SpotCache; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		8DD76F660486A84900D96B5E /* Frameworks */ = {
+		051465110FF5D2270011052B /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				05FFEB570FD6F222007558B2 /* libsqlite3.dylib in Frameworks */,
-				054195520FD869F2009BA8C6 /* libcrypto.dylib in Frameworks */,
+				051465790FF5D4E80011052B /* libcrypto.dylib in Frameworks */,
+				0514657A0FF5D4E80011052B /* libsqlite3.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -58,7 +49,6 @@
 			children = (
 				050330270FD4663F0034612D /* Cache.cc */,
 				050330280FD4663F0034612D /* Cache.h */,
-				05FFEB4B0FD6F10E007558B2 /* test.cc */,
 				05FFEB5A0FD6F269007558B2 /* SqliteCache.h */,
 				05FFEB5B0FD6F269007558B2 /* SqliteCache.cpp */,
 				054195740FD87537009BA8C6 /* Sqlite.h */,
@@ -67,9 +57,28 @@
 			path = src;
 			sourceTree = "<group>";
 		};
+		0514650E0FF5D1FB0011052B /* tests */ = {
+			isa = PBXGroup;
+			children = (
+				051465680FF5D4800011052B /* tests.cpp */,
+				051465530FF5D3DC0011052B /* SqliteDbSuite.h */,
+				051465FF0FF5E0F60011052B /* SqliteTableSuite.h */,
+				0514662F0FF5EFD60011052B /* SqliteCacheSuite.h */,
+			);
+			path = tests;
+			sourceTree = "<group>";
+		};
+		0514653D0FF5D3510011052B /* cxxtest */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = cxxtest;
+			sourceTree = "<group>";
+		};
 		05FFEB550FD6F215007558B2 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				0514653D0FF5D3510011052B /* cxxtest */,
 				054195510FD869F2009BA8C6 /* libcrypto.dylib */,
 				05FFEB560FD6F222007558B2 /* libsqlite3.dylib */,
 			);
@@ -80,6 +89,7 @@
 			isa = PBXGroup;
 			children = (
 				050330260FD4663F0034612D /* src */,
+				0514650E0FF5D1FB0011052B /* tests */,
 				05FFEB550FD6F215007558B2 /* Libraries */,
 				1AB674ADFE9D54B511CA2CBB /* Products */,
 			);
@@ -89,7 +99,7 @@
 		1AB674ADFE9D54B511CA2CBB /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				8DD76F6C0486A84900D96B5E /* SpotCache */,
+				051465130FF5D2270011052B /* test */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -97,22 +107,21 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		8DD76F620486A84900D96B5E /* SpotCache */ = {
+		051465120FF5D2270011052B /* test */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 1DEB923108733DC60010E9CD /* Build configuration list for PBXNativeTarget "SpotCache" */;
+			buildConfigurationList = 051465200FF5D22F0011052B /* Build configuration list for PBXNativeTarget "test" */;
 			buildPhases = (
-				8DD76F640486A84900D96B5E /* Sources */,
-				8DD76F660486A84900D96B5E /* Frameworks */,
-				8DD76F690486A84900D96B5E /* CopyFiles */,
+				051465550FF5D3F80011052B /* ShellScript */,
+				051465100FF5D2270011052B /* Sources */,
+				051465110FF5D2270011052B /* Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
-			name = SpotCache;
-			productInstallPath = "$(HOME)/bin";
-			productName = SpotCache;
-			productReference = 8DD76F6C0486A84900D96B5E /* SpotCache */;
+			name = test;
+			productName = test;
+			productReference = 051465130FF5D2270011052B /* test */;
 			productType = "com.apple.product-type.tool";
 		};
 /* End PBXNativeTarget section */
@@ -127,27 +136,44 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				8DD76F620486A84900D96B5E /* SpotCache */,
+				051465120FF5D2270011052B /* test */,
 			);
 		};
 /* End PBXProject section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		051465550FF5D3F80011052B /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "python vendor/cxxtest/cxxtestgen.py --error-printer -o tests/tests.cpp tests/SqliteDbSuite.h tests/SqliteTableSuite.h tests/SqliteCacheSuite.h";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
-		8DD76F640486A84900D96B5E /* Sources */ = {
+		051465100FF5D2270011052B /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				050330290FD4663F0034612D /* Cache.cc in Sources */,
-				05FFEB4C0FD6F10E007558B2 /* test.cc in Sources */,
-				05FFEB5C0FD6F269007558B2 /* SqliteCache.cpp in Sources */,
-				054195760FD87537009BA8C6 /* Sqlite.cpp in Sources */,
+				051465690FF5D4800011052B /* tests.cpp in Sources */,
+				051465740FF5D4DD0011052B /* Cache.cc in Sources */,
+				051465750FF5D4DD0011052B /* SqliteCache.cpp in Sources */,
+				051465760FF5D4DD0011052B /* Sqlite.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
-		1DEB923208733DC60010E9CD /* Debug */ = {
+		051465150FF5D2280011052B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -156,24 +182,26 @@
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_MODEL_TUNING = G5;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"_GLIBCXX_DEBUG=1",
-					"_GLIBCXX_DEBUG_PEDANTIC=1",
-				);
-				HEADER_SEARCH_PATHS = /usr/include;
+				HEADER_SEARCH_PATHS = vendor/cxxtest;
 				INSTALL_PATH = /usr/local/bin;
-				PRODUCT_NAME = SpotCache;
+				PREBINDING = NO;
+				PRODUCT_NAME = test;
+				USER_HEADER_SEARCH_PATHS = .;
 			};
 			name = Debug;
 		};
-		1DEB923308733DC60010E9CD /* Release */ = {
+		051465160FF5D2280011052B /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_MODEL_TUNING = G5;
 				INSTALL_PATH = /usr/local/bin;
-				PRODUCT_NAME = SpotCache;
+				PREBINDING = NO;
+				PRODUCT_NAME = test;
+				ZERO_LINK = NO;
 			};
 			name = Release;
 		};
@@ -206,11 +234,11 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		1DEB923108733DC60010E9CD /* Build configuration list for PBXNativeTarget "SpotCache" */ = {
+		051465200FF5D22F0011052B /* Build configuration list for PBXNativeTarget "test" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				1DEB923208733DC60010E9CD /* Debug */,
-				1DEB923308733DC60010E9CD /* Release */,
+				051465150FF5D2280011052B /* Debug */,
+				051465160FF5D2280011052B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

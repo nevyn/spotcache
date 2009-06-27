@@ -1,3 +1,5 @@
+#ifndef SQLITE__CLASS__H
+#define SQLITE__CLASS__H
 /*
  *  Sqlite.h
  *  SpotCache
@@ -33,9 +35,9 @@ public:
 		
 		// Bind values to parameters. i is the index of the parameter,
 		// and is 1-based
-		void bind(int i, const vector<uint8_t>&); // blob
-		void bind(int i, const string&); // text
-		void bind(int i, int); // int
+		void bind(int i, const vector<uint8_t>&) throw(Error); // blob
+		void bind(int i, const string&) throw(Error); // text
+		void bind(int i, int) throw(Error); // int
 		
 		// Run the query. For a query that does not return a value
 		// or if you don't want the value, run once.
@@ -61,7 +63,7 @@ public:
 		
 		// If you want to reuse the statement after running it,
 		// use reset() before binding new values.
-		void reset();
+		void reset() throw(Error);
 		
 		// Create a resetter to auto-reset when a scope in which
 		// you use bind() ends
@@ -88,12 +90,14 @@ public:
 	Statement::Ptr prepareFirst(const string &statement);
 
 	// Runs the first statement of a string, ignoring the return value.
-	void run(const string &statement);
+	// Will throw with errorCode == SQLITE_BUSY if busy
+	void run(const string &statement) throw(Error);
 	
 	Sqlite(const string &path);
 	~Sqlite();
 protected:
 	sqlite3 *db;
 	
-	void check(int err);
+	void check(int err) throw(Error);
 };
+#endif

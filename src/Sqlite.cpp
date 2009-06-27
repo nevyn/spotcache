@@ -11,7 +11,8 @@
 
 void
 Sqlite::
-check(int err) {
+check(int err) throw(Error)
+{
 	if(err != SQLITE_OK) {
 		Sqlite::Error exc = Sqlite::Error(sqlite3_errmsg(db));
 		exc.errorCode = err;
@@ -46,10 +47,15 @@ prepareFirst(const string &statement) {
 
 void
 Sqlite::
-run(const string &statement)
+run(const string &statement) throw(Error)
 {
 	Sqlite::Statement::Ptr stmt = prepareFirst(statement);
-	stmt->step();
+	int status = stmt->step();
+	if(status == SQLITE_BUSY) {
+		Sqlite::Error exc = Sqlite::Error("Database was busy and unable to perform request "+statement);
+		exc.errorCode = SQLITE_BUSY;
+		throw exc;		
+	}
 }
 
 
@@ -77,20 +83,20 @@ prepare(const string &statement)
 
 void
 Sqlite::Statement::
-bind(int i, int v)
+bind(int i, int v) throw(Error)
 {
 	parent.check(sqlite3_bind_int(stmt, i, v));
 }
 
 void
 Sqlite::Statement::
-bind(int i, const string &v)
+bind(int i, const string &v) throw(Error)
 {
 	parent.check(sqlite3_bind_text(stmt, i, v.c_str(), v.length(), SQLITE_TRANSIENT));
 }
 void
 Sqlite::Statement::
-bind(int i, const vector<uint8_t> &v)
+bind(int i, const vector<uint8_t> &v) throw(Error)
 {
 	parent.check(sqlite3_bind_blob(stmt, i, &(*v.begin()), v.size(), SQLITE_TRANSIENT));
 }
@@ -102,15 +108,21 @@ step(int tryCount)
 {
 	int status = sqlite3_step(stmt);
 	lastStepStatus = status;
-	if(status == SQLITE_ERROR)
-		parent.check(status); // This will throw
 	
 	if(status == SQLITE_BUSY && tryCount > 0) {
 		sqlite3_sleep(100);
 		return step(tryCount-1);
+		
+	}	else if (status == SQLITE_BUSY && tryCount == 0) {
+		return SQLITE_BUSY;
+		
+	} else if (status == SQLITE_DONE || status == SQLITE_ROW) {
+		return status;
 	}
 	
-	return status;
+	// Any remaining cases are errors
+	parent.check(status); // This will throw
+	return SQLITE_ERROR; // never reached
 }
 
 bool
@@ -171,7 +183,7 @@ byteLength(int i)
 
 void
 Sqlite::Statement::
-reset()
+reset() throw(Error)
 {
 	parent.check(sqlite3_reset(stmt));
 	parent.check(sqlite3_clear_bindings(stmt));
