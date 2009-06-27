@@ -11,9 +11,14 @@
 using std::vector;
 using std::string;
 
+
 class Cache { 
 public: 
-	typedef vector<uint8_t> ObjectId; 
+	class ObjectId : public vector<uint8_t> {
+	public:
+		ObjectId(const string &other) : vector<uint8_t>(other.begin(), other.end()) { }
+		ObjectId(const vector<uint8_t> &other) : vector<uint8_t>(other.begin(), other.end()) { }
+	};
 	
 	typedef enum {
 		ObjectNotCached = 0,

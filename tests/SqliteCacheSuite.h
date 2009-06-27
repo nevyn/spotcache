@@ -51,6 +51,10 @@ public:
 		TS_ASSERT_EQUALS(ca, Cache::ObjectNotCached);
 	}
 	
+	void testHasObjectOfNonExistingObject() {
+		TS_ASSERT( ! cache->hasObject(string("DOES NOT EXIST")) );
+	}
+	
 	void testReadingNonExistingObject() {
 		vector<uint8_t> nothing;
 		bool success = cache->readObject(key, nothing);
@@ -65,6 +69,10 @@ public:
 	void testPartialAvailability() {
 		Cache::CacheAvailability ca = cache->objectIsAvailable(key);
 		TS_ASSERT_EQUALS(ca, Cache::ObjectPartiallyCached);
+	}
+	
+	void testHasObjectOfPartialObject() {
+		TS_ASSERT( ! cache->hasObject(key) );
 	}
 	
 	void testReadingPartial() {
@@ -85,9 +93,18 @@ public:
 		vector<uint8_t> expected = key;
 		expected.insert(expected.end(), key.begin(), key.end());
 		TS_ASSERT_EQUALS(expected, complete);
-		
-		
 	}
+	
+	void testCompleteAvailability() {
+		Cache::CacheAvailability ca = cache->objectIsAvailable(key);
+		TS_ASSERT_EQUALS(ca, Cache::ObjectCached);
+	}
+	
+	
+	void testHasObjectOfCompleteObject() {
+		TS_ASSERT( cache->hasObject(key) );
+	}
+	
 	
 	void testFinalizingAlreadyFinalized() {
 		TS_ASSERT_THROWS(cache->writeObject(key, key, true),
