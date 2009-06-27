@@ -49,7 +49,7 @@ Sqlite::
 run(const string &statement)
 {
 	Sqlite::Statement::Ptr stmt = prepareFirst(statement);
-	stmt->stepUntilNotBusy();
+	stmt->step();
 }
 
 
@@ -82,6 +82,92 @@ bind(int i, int v)
 	parent.check(sqlite3_bind_int(stmt, i, v));
 }
 
+void
+Sqlite::Statement::
+bind(int i, const string &v)
+{
+	parent.check(sqlite3_bind_text(stmt, i, v.c_str(), v.length(), SQLITE_TRANSIENT));
+}
+void
+Sqlite::Statement::
+bind(int i, const vector<uint8_t> &v)
+{
+	parent.check(sqlite3_bind_blob(stmt, i, &(*v.begin()), v.size(), SQLITE_TRANSIENT));
+}
+
+
+int
+Sqlite::Statement::
+step(int tryCount)
+{
+	int status = sqlite3_step(stmt);
+	lastStepStatus = status;
+	if(status == SQLITE_ERROR)
+		parent.check(status); // This will throw
+	
+	if(status == SQLITE_BUSY && tryCount > 0) {
+		sqlite3_sleep(100);
+		return step(tryCount-1);
+	}
+	
+	return status;
+}
+
+bool
+Sqlite::Statement::
+hasData()
+{
+	return lastStepStatus == SQLITE_ROW;
+}
+
+int
+Sqlite::Statement::
+intColumn(int i)
+{
+	return sqlite3_column_int(stmt, i);
+}
+double 
+Sqlite::Statement::
+doubleColumn(int i)
+{
+	return sqlite3_column_double(stmt, i);
+}
+string
+Sqlite::Statement::
+textColumn(int i)
+{
+	const char *text = (const char *)sqlite3_column_text(stmt, i);
+	return string(text);
+}
+
+vector<uint8_t>
+Sqlite::Statement::
+blobColumn(int i)
+{
+	vector<uint8_t> v(byteLength(i));
+	column(i, v);
+	return v;
+}
+
+void
+Sqlite::Statement::
+column(int i, vector<uint8_t> &v)
+{
+	const uint8_t *data = (const uint8_t *)sqlite3_column_blob(stmt, i);
+	int datalen = sqlite3_column_bytes(stmt, i);
+	for(int i = 0; i < datalen; i++)
+		v.push_back(data[i]);
+}
+
+int
+Sqlite::Statement::
+byteLength(int i)
+{
+	sqlite3_column_blob(stmt, i); // put sqlite in blob mode so next line works
+	return sqlite3_column_bytes(stmt, i);
+}
+
+
 
 void
 Sqlite::Statement::
@@ -90,26 +176,3 @@ reset()
 	parent.check(sqlite3_reset(stmt));
 	parent.check(sqlite3_clear_bindings(stmt));
 }
-
-int
-Sqlite::Statement::
-step()
-{
-	int status = sqlite3_step(stmt);
-	if(status == SQLITE_ERROR)
-		parent.check(status); // This will throw
-	return status;
-}
-
-int
-Sqlite::Statement::
-stepUntilNotBusy(int tryCount)
-{
-	int status = step();
-	if(status == SQLITE_BUSY && tryCount > 0) {
-		sqlite3_sleep(100);
-		return stepUntilNotBusy(tryCount-1);
-	}
-	return status;
-}
-

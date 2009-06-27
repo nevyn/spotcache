@@ -21,7 +21,10 @@ public:
 		ObjectPartiallyCached = 2
 	} CacheAvailability;
 	
-	class AppendingToCompletedObjectException : public std::logic_error {};
+	struct AppendingToCompletedObjectException : public std::logic_error {
+		AppendingToCompletedObjectException()
+		: std::logic_error("AppendingToCompletedObjectException") {}
+	};
 	
 	virtual ~Cache() {} 
 	

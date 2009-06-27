@@ -8,6 +8,8 @@
  */
 #include <string>
 using std::string;
+#include <vector>
+using std::vector;
 #include <stdexcept>
 #include <memory>
 
@@ -28,14 +30,48 @@ public:
 		typedef std::auto_ptr<Statement> Ptr;
 		
 		~Statement();
-		// Bind values to parameters. i is the index of the parameter.
-		void bind(int i, const void*); // blob
-		void bind(int i, string); // text
+		
+		// Bind values to parameters. i is the index of the parameter,
+		// and is 1-based
+		void bind(int i, const vector<uint8_t>&); // blob
+		void bind(int i, const string&); // text
 		void bind(int i, int); // int
 		
+		// Run the query. For a query that does not return a value
+		// or if you don't want the value, run once.
+		// Otherwise, run until it returns SQLITE_DONE and between
+		// each step, use the column methods to fetch the row data
+		int step(int retryCount = 10);
+		
+		// Check if the last step() resulted in a row being returned.
+		// Only if this returns true may you use the column methods.
+		bool hasData();
+		
+		// byval accessors. i is column id and is 0-based
+		int intColumn(int i);
+		double doubleColumn(int i);
+		string textColumn(int i);
+		vector<uint8_t> blobColumn(int i);
+		// byref accessors
+		void column(int i, vector<uint8_t> &v);
+		
+		// Length in bytes of the data at column i
+		int byteLength(int i);
+		
+		
+		// If you want to reuse the statement after running it,
+		// use reset() before binding new values.
 		void reset();
-		int step();
-		int stepUntilNotBusy(int tryCount = 10);
+		
+		// Create a resetter to auto-reset when a scope in which
+		// you use bind() ends
+		class Resetter {
+		public:
+			Resetter(Statement &stmt_) : stmt(stmt_) {}
+			~Resetter() { stmt.reset(); }
+		protected:
+			Statement &stmt;
+		};
 	protected:
 		Statement(Sqlite &parent);
 		// Prepares the first statement in 'statement' and returns
@@ -44,6 +80,7 @@ public:
 
 		sqlite3_stmt *stmt;
 		Sqlite &parent;
+		int lastStepStatus;
 	};
 	
 	// Prepares the statement in the string 'statement'. If there are
