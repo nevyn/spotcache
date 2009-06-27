@@ -80,7 +80,7 @@ bool
 SqliteCache::
 writeObject(const ObjectId &obj_id, 
 						const vector<uint8_t>	 &value,
-						bool completesInsertion)
+						bool completesInsertion) throw(AppendingToCompletedObjectException)
 {
 	CacheAvailability ca = objectIsAvailable(obj_id);
 	

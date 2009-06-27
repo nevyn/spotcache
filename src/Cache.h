@@ -52,7 +52,7 @@ public:
 	// is thrown.
 	virtual bool writeObject(const ObjectId &obj_id, 
 	                         const vector<uint8_t>	 &value,
-													 bool completesInsertion = true) = 0; 
+													 bool completesInsertion = true) throw(AppendingToCompletedObjectException) = 0;
 	
 	// Erase an object from the cache 
 	virtual bool eraseObject(const ObjectId &obj_id) = 0; 

@@ -30,7 +30,7 @@ public:
 	Cache *cache;
 
 	SqliteCacheSuite() {
-		string keyString = "asdf";
+		string keyString = "1234";
 		key = vector<uint8_t>(keyString.begin(), keyString.end());
 		cache = createCache("/tmp/test.cache", key);
 		cache->setMaxSize(0); // empty it
@@ -110,7 +110,31 @@ public:
 		TS_ASSERT_THROWS(cache->writeObject(key, key, true),
 										 Cache::AppendingToCompletedObjectException);
 	}
-
+	
+	void testGettingSize() {
+		// Cache currently contains 8 bytes ("12341234")
+		TS_ASSERT_EQUALS(cache->getCurrentSize(), 8);
+	}
+	
+	void testOversteppingCacheSize() {
+		Cache::ObjectId key2 = Cache::ObjectId(string("key 2"));
+		
+		cache->setMaxSize(8+3);
+		
+		// Inserting a new object of size 4 should push the old one out and this
+		// write should succeed
+		bool success;
+		TS_ASSERT_THROWS_NOTHING(success = cache->writeObject(key2, key));
+		TS_ASSERT(success);
+		
+		// Should have been pushed out
+		TS_ASSERT( ! cache->hasObject(key) );
+		
+		// Should have replaced it
+		TS_ASSERT( cache->hasObject(key2) );
+		
+		TS_ASSERT_EQUALS( cache->getCurrentSize(), 4 );
+	}
 	
 	
 };

@@ -27,7 +27,7 @@ public:
 	bool readObject(const ObjectId &obj_id, vector<uint8_t> &result);
 	bool writeObject(const ObjectId &obj_id, 
 	                         const vector<uint8_t>	 &value,
-													 bool completesInsertion = true); 
+													 bool completesInsertion = true) throw(AppendingToCompletedObjectException); 
 	bool eraseObject(const ObjectId &obj_id);
 	virtual void setMaxSize(uint64_t max_size); 
 	virtual uint64_t getCurrentSize();
