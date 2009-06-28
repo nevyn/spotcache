@@ -184,6 +184,10 @@
 				GCC_OPTIMIZATION_LEVEL = 0;
 				HEADER_SEARCH_PATHS = vendor/cxxtest;
 				INSTALL_PATH = /usr/local/bin;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/usr/X11/lib,
+				);
 				PREBINDING = NO;
 				PRODUCT_NAME = test;
 				USER_HEADER_SEARCH_PATHS = .;
@@ -199,6 +203,10 @@
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_MODEL_TUNING = G5;
 				INSTALL_PATH = /usr/local/bin;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/usr/X11/lib,
+				);
 				PREBINDING = NO;
 				PRODUCT_NAME = test;
 				ZERO_LINK = NO;

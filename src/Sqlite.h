@@ -23,7 +23,7 @@ public:
 	public:
 		Error(string err) : std::runtime_error(err) {}
 		
-		int errorCode;
+		int32_t errorCode;
 	};
 	
 	class Statement {
@@ -35,30 +35,30 @@ public:
 		
 		// Bind values to parameters. i is the index of the parameter,
 		// and is 1-based
-		void bind(int i, const vector<uint8_t>&) throw(Error); // blob
-		void bind(int i, const string&) throw(Error); // text
-		void bind(int i, int) throw(Error); // int
+		void bind(int32_t i, const vector<uint8_t>&) throw(Error); // blob
+		void bind(int32_t i, const string&) throw(Error); // text
+		void bind(int32_t i, int32_t) throw(Error); // int
 		
 		// Run the query. For a query that does not return a value
 		// or if you don't want the value, run once.
 		// Otherwise, run until it returns SQLITE_DONE and between
 		// each step, use the column methods to fetch the row data
-		int step(int retryCount = 10);
+		int32_t step(int32_t retryCount = 10);
 		
 		// Check if the last step() resulted in a row being returned.
 		// Only if this returns true may you use the column methods.
 		bool hasData();
 		
 		// byval accessors. i is column id and is 0-based
-		int intColumn(int i);
-		double doubleColumn(int i);
-		string textColumn(int i);
-		vector<uint8_t> blobColumn(int i);
+		int32_t intColumn(int32_t i);
+		double doubleColumn(int32_t i);
+		string textColumn(int32_t i);
+		vector<uint8_t> blobColumn(int32_t i);
 		// byref accessors
-		void column(int i, vector<uint8_t> &v);
+		void column(int32_t i, vector<uint8_t> &v);
 		
 		// Length in bytes of the data at column i
-		int byteLength(int i);
+		int32_t byteLength(int32_t i);
 		
 		
 		// If you want to reuse the statement after running it,
@@ -82,7 +82,7 @@ public:
 
 		sqlite3_stmt *stmt;
 		Sqlite &parent;
-		int lastStepStatus;
+		int32_t lastStepStatus;
 	};
 	
 	// Prepares the statement in the string 'statement'. If there are
@@ -98,6 +98,6 @@ public:
 protected:
 	sqlite3 *db;
 	
-	void check(int err) throw(Error);
+	void check(int32_t err) throw(Error);
 };
 #endif

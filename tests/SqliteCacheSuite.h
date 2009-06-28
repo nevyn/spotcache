@@ -8,7 +8,7 @@
  */
 
 #include <cxxtest/TestSuite.h>
-
+#define IS_TESTING
 #include "SqliteCache.h"
 
 #include <iostream>
@@ -26,12 +26,10 @@ CXXTEST_ENUM_TRAITS( Cache::CacheAvailability,
 
 class SqliteCacheSuite : public CxxTest::TestSuite {
 public:
-	vector<uint8_t> key;
+	Cache::ObjectId key;
 	Cache *cache;
 
-	SqliteCacheSuite() {
-		string keyString = "1234";
-		key = vector<uint8_t>(keyString.begin(), keyString.end());
+	SqliteCacheSuite() : key("1234") {
 		cache = createCache("/tmp/test.cache", key);
 		cache->setMaxSize(0); // empty it
 		cache->setMaxSize(UINT_MAX);
@@ -52,7 +50,7 @@ public:
 	}
 	
 	void testHasObjectOfNonExistingObject() {
-		TS_ASSERT( ! cache->hasObject(string("DOES NOT EXIST")) );
+		TS_ASSERT( ! cache->hasObject("DOES NOT EXIST") );
 	}
 	
 	void testReadingNonExistingObject() {
@@ -117,7 +115,7 @@ public:
 	}
 	
 	void testOversteppingCacheSize() {
-		Cache::ObjectId key2 = Cache::ObjectId(string("key 2"));
+		Cache::ObjectId key2 = "key 2";
 		
 		cache->setMaxSize(8+3);
 		
@@ -134,6 +132,31 @@ public:
 		TS_ASSERT( cache->hasObject(key2) );
 		
 		TS_ASSERT_EQUALS( cache->getCurrentSize(), 4 );
+	}
+	
+	// End in-order dependency
+	
+	void testCorruptingStore() {
+		Cache::ObjectId someKey = "this'll become corrupted";
+		cache->writeObject(someKey, someKey);
+		
+		vector<uint8_t> value;
+		
+		TS_ASSERT( cache->readObject(someKey, value) == true);
+		
+		Cache::ObjectId realKey = ((SqliteCache*)cache)->keyify(someKey);
+		
+		{
+			Sqlite store("/tmp/test.cache");
+			Sqlite::Statement::Ptr corruptStmt = store.prepareFirst("update cache set data = ? where object_id = ?;");
+			corruptStmt->bind(1, "lol");
+			corruptStmt->bind(2, realKey);
+			TS_ASSERT_EQUALS(corruptStmt->step(), SQLITE_DONE);
+		}
+		
+		TS_ASSERT( cache->hasObject(someKey) == true );
+		
+		TS_ASSERT( cache->readObject(someKey, value) == false);
 	}
 	
 	

@@ -15,6 +15,9 @@
 
 class SqliteCache : public Cache {
 	friend Cache *createCache(const string &path, const vector<uint8_t> &encryption_key); 
+#ifdef IS_TESTING
+	friend class SqliteCacheSuite;
+#endif
 public:
 	// --- Types ---
 	
@@ -32,12 +35,14 @@ public:
 	virtual void setMaxSize(uint64_t max_size); 
 	virtual uint64_t getCurrentSize();
 	
+	time_t accessTimeOfObject(const ObjectId &obj_id);
+	
 	// --- Implementation detail methods --
 protected:
 	/// Salts the obj_id with this->key and hashes it. This is what will be used
 	/// to do lookups in the db. The end result is that running this Cache
 	/// instance with the wrong key yields a seemingly empty database.
-	string keyify(const ObjectId &obj_id);
+	ObjectId keyify(const ObjectId &obj_id);
 	SqliteCache(const string &path, const vector<uint8_t> &encryption_key);
 	
 	// --- Ivars ---
@@ -45,7 +50,7 @@ protected:
 	const vector<uint8_t> key;
 	
 	Sqlite db;
-	Sqlite::Statement::Ptr hasStmt, readStmt, writeStmt, removeStmt;
+	Sqlite::Statement::Ptr hasStmt, readStmt, writeStmt, removeStmt, touchStmt;
 	
 	
 };

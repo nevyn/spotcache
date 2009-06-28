@@ -16,8 +16,14 @@ class Cache {
 public: 
 	class ObjectId : public vector<uint8_t> {
 	public:
-		ObjectId(const string &other) : vector<uint8_t>(other.begin(), other.end()) { }
-		ObjectId(const vector<uint8_t> &other) : vector<uint8_t>(other.begin(), other.end()) { }
+		ObjectId(const string &other)
+			: vector<uint8_t>(other.begin(), other.end()) { }
+		ObjectId(const char *other)
+		  : vector<uint8_t>(other, other+strlen(other)) { }
+		ObjectId(const vector<uint8_t> &other)
+			: vector<uint8_t>(other.begin(), other.end()) { }
+		ObjectId(size_type __n)
+			: vector<uint8_t>(__n) { }
 	};
 	
 	typedef enum {
@@ -45,14 +51,16 @@ public:
 	// has been deleted. 
 	virtual bool readObject(const ObjectId &obj_id, vector<uint8_t> &result)=0; 
 	
-	// Write an object to the cache. If object already exists,
-	// it's appended to. If completesInsertion is set, object is marked as
-	// complete and cached. If the object is already marked as complete
-	// and writeObject is called on it, AppendingToCompletedObjectException
-	// is thrown.
+	// Write an object to the cache. If object already exists, it's appended to. 
+	// @arg completesInsertion marks if the write makes the object complete
+	// @throws AppendingToCompletedObjectException if the object is already marked
+	//         as complete and writeObject is called on it
+	// @returns true on success
+	// @returns false if the object is too big to fit in cache
 	virtual bool writeObject(const ObjectId &obj_id, 
 	                         const vector<uint8_t>	 &value,
-													 bool completesInsertion = true) throw(AppendingToCompletedObjectException) = 0;
+													 bool completesInsertion = true)
+										 throw(AppendingToCompletedObjectException) = 0;
 	
 	// Erase an object from the cache 
 	virtual bool eraseObject(const ObjectId &obj_id) = 0; 

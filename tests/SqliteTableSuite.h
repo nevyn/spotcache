@@ -21,17 +21,17 @@ public:
 	
 	void testInsert( void )
 	{
-		static int insertedValue = 42;
+		static int32_t insertedValue = 42;
 		Sqlite::Statement::Ptr insert = db->prepareFirst("insert into foo values (?);");
 		insert->bind(1, insertedValue);
 		TS_ASSERT_THROWS_NOTHING(insert->step());
 		insert->reset();
 		
 		Sqlite::Statement::Ptr confirm = db->prepareFirst("select * from foo where i = 42;");
-		int status;
+		int32_t status;
 		TS_ASSERT_THROWS_NOTHING(status = confirm->step());
 		TS_ASSERT_EQUALS(status, SQLITE_ROW);
-		int fetchedValue = confirm->intColumn(0);
+		int32_t fetchedValue = confirm->intColumn(0);
 		TS_ASSERT_EQUALS(fetchedValue, insertedValue);
 		
 		TS_ASSERT_THROWS_NOTHING(status = confirm->step());
