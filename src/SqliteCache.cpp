@@ -27,7 +27,6 @@ SqliteCache::
 SqliteCache(const string &path, const vector<uint8_t> &encryption_key)
 : db(path), key(encryption_key)
 {
-	db.run("PRAGMA auto_vacuum = FULL;");
 	db.run(schema);
 	hasStmt = db.prepareFirst("select completed from cache where object_id = ?;");
 	readStmt = db.prepareFirst("select data, datahash from cache where object_id = ?;");
@@ -167,7 +166,13 @@ setMaxSize(uint64_t max_size)
 	if(0 == max_size)
 		db.run("delete from cache;");
 	
-	// TODO
+		// TODO
+	
+	// Since we never grow beyond max_size, the sqlite cachesize+freelist will never be
+	// bigger than max_size. If we decrease max_size however, we must vacuum
+	// to make the cachesize+freelist smaller than max_size.
+	// By not autovacuuming, we allow sqlite to optimize the free space
+	db.run("VACUUM;");
 }
 
 uint64_t
