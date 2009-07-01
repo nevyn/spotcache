@@ -45,14 +45,25 @@ protected:
 	ObjectId keyify(const ObjectId &obj_id);
 	SqliteCache(const string &path, const vector<uint8_t> &encryption_key);
 	
+	/// Deletes cache objects if needed to make sure the cache has freeByteCount
+	/// bytes available before reaching maxSize. Uses ensureMaxUsage.
+	/// @returns false if that's not possible without exceeding maxSize.
+	bool ensureFreeSpace(uint64_t freeByteCount);
+	/// Deletes cache objects if needed to make sure cache doesn't use more than
+	/// maxUsageByteCount bytes.
+	/// @returns false if that's not possible without exceeding maxSize.
+	bool ensureMaxUsage(uint64_t maxUsageByteCount);
+	
+	
 	// --- Ivars ---
 protected:
 	const vector<uint8_t> key;
 	
 	Sqlite db;
-	Sqlite::Statement::Ptr hasStmt, readStmt, writeStmt, removeStmt, touchStmt;
+	Sqlite::Statement::Ptr hasStmt, readStmt, writeStmt, removeStmt, touchStmt,
+												 sizeStmt;
 	
-	
+	uint64_t max_size;
 };
 
 #endif

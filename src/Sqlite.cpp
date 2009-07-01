@@ -140,6 +140,12 @@ intColumn(int32_t i)
 {
 	return sqlite3_column_int(stmt, i);
 }
+int64_t 
+Sqlite::Statement::
+int64Column(int32_t i)
+{
+	return sqlite3_column_int64(stmt, i);
+}
 double 
 Sqlite::Statement::
 doubleColumn(int32_t i)

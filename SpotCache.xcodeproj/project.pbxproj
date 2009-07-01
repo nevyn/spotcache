@@ -26,6 +26,7 @@
 		054195510FD869F2009BA8C6 /* libcrypto.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcrypto.dylib; path = /usr/lib/libcrypto.dylib; sourceTree = "<absolute>"; };
 		054195740FD87537009BA8C6 /* Sqlite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Sqlite.h; sourceTree = "<group>"; };
 		054195750FD87537009BA8C6 /* Sqlite.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Sqlite.cpp; sourceTree = "<group>"; };
+		05EC2FFF0FFB8FFB0030DCF9 /* todo.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = todo.txt; sourceTree = "<group>"; };
 		05FFEB560FD6F222007558B2 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = /usr/lib/libsqlite3.dylib; sourceTree = "<absolute>"; };
 		05FFEB5A0FD6F269007558B2 /* SqliteCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SqliteCache.h; sourceTree = "<group>"; };
 		05FFEB5B0FD6F269007558B2 /* SqliteCache.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SqliteCache.cpp; sourceTree = "<group>"; };
@@ -92,6 +93,7 @@
 				0514650E0FF5D1FB0011052B /* tests */,
 				05FFEB550FD6F215007558B2 /* Libraries */,
 				1AB674ADFE9D54B511CA2CBB /* Products */,
+				05EC2FFF0FFB8FFB0030DCF9 /* todo.txt */,
 			);
 			name = SpotCache;
 			sourceTree = "<group>";

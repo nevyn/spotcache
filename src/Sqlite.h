@@ -51,6 +51,7 @@ public:
 		
 		// byval accessors. i is column id and is 0-based
 		int32_t intColumn(int32_t i);
+		int64_t int64Column(int32_t i);
 		double doubleColumn(int32_t i);
 		string textColumn(int32_t i);
 		vector<uint8_t> blobColumn(int32_t i);
