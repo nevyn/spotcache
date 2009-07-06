@@ -12,6 +12,8 @@
 
 #include "Cache.h"
 #include "Sqlite.h"
+#include <stdio.h>
+#include <stdint.h>
 
 class SqliteCache : public Cache {
 	friend Cache *createCache(const string &path, const vector<uint8_t> &encryption_key); 
@@ -25,18 +27,24 @@ public:
 		friend class SqliteCache;
 	public:		
 		uint64_t positionIndicator();
-		uint64_t seek(uint64_t, int whence);
+		uint64_t seek(int64_t, int whence);
 		
 		void append(const vector<uint8_t> &value);
 		void writeAt(uint64_t offset, const vector<uint8_t> &value);
 		
 		void resize(uint64_t new_size);
 		
-		virtual ~SCPartial();
+		~SCPartial();
 	protected:
-		SCPartial();
-		SCPartial(SqliteCache &cache);
+		SCPartial(SqliteCache *cache, const ObjectId &obj_id);
 		
+		uint64_t size();
+	private:
+		SCPartial();
+		uint64_t _positionIndicator;
+		SqliteCache * const cache;
+		const ObjectId obj_id;
+		sqlite3_blob *blob;
 	};
 	// --- Methods ---
 	~SqliteCache();
@@ -46,6 +54,9 @@ public:
 	CacheAvailability objectIsAvailable(const ObjectId &obj_id);
 	bool readObject(const ObjectId &obj_id, vector<uint8_t> &result);
 	bool writeObject(const ObjectId &obj_id, const vector<uint8_t>	 &value);
+	
+	// Unfortunately, due to sqlite3's API using 'int', INT_MAX (note: signed)
+	// is the highest possible value in bytesToReserve.
 	Partial::Ptr partial(const ObjectId &obj_id, uint64_t bytesToReserve);
 	bool eraseObject(const ObjectId &obj_id);
 	virtual void setMaxSize(uint64_t max_size); 

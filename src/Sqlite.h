@@ -37,7 +37,9 @@ public:
 		// and is 1-based
 		void bind(int32_t i, const vector<uint8_t>&) throw(Error); // blob
 		void bind(int32_t i, const string&) throw(Error); // text
-		void bind(int32_t i, int32_t) throw(Error); // int
+		void bind(int32_t i, int32_t) throw(Error); // int		
+		// Reserves n bytes of zeroes
+		void bindZeroBlob(int32_t i, int32_t n)  throw(Error); 
 		
 		// Run the query. For a query that does not return a value
 		// or if you don't want the value, run once.
@@ -80,15 +82,43 @@ public:
 		// Prepares the first statement in 'statement' and returns
 		// the rest of the string.
 		string prepare(const string &statement);
-
+	
+	private:
 		sqlite3_stmt *stmt;
 		Sqlite &parent;
 		int32_t lastStepStatus;
 	};
 	
+	class Blob {
+		friend class Sqlite;
+	public:
+		~Blob();
+		typedef std::auto_ptr<Blob> Ptr;
+		
+		int32_t size();
+		// If bytesToRead is not given, size() bytes are read.
+		vector<uint8_t> read(int32_t bytesToRead=-1, int32_t offset=0) throw(Error);
+		void read(vector<uint8_t>::iterator destination, 
+							int32_t bytesToRead=-1,
+							int32_t offset = 0) throw(Error);
+		void write(const vector<uint8_t> &source, int32_t offset = 0) throw(Error);
+		void write(const vector<uint8_t>::const_iterator from,
+							 const vector<uint8_t>::const_iterator to,
+							 int32_t destOffset) throw(Error);
+	protected:
+		Blob(Sqlite &parent,
+							const string &table, const string &columnName, int64_t rowid);
+	private:
+		Sqlite &parent;
+		sqlite3_blob *blob;
+	};
+	
 	// Prepares the statement in the string 'statement'. If there are
 	// several statements in the string, all but the first are ignored.
 	Statement::Ptr prepareFirst(const string &statement);
+	
+	// Open up a Blob for incremental read and write
+	Blob::Ptr blob(const string &table, const string &columnName, int64_t rowid);
 
 	// Runs the first statement of a string, ignoring the return value.
 	// Will throw with errorCode == SQLITE_BUSY if busy

@@ -43,7 +43,7 @@ public:
 		/// A Partial saves a position indicator similar to how fread/fwrite works.
 		virtual uint64_t positionIndicator() = 0;
 		/// Like fseek()
-		virtual uint64_t seek(uint64_t, int whence) = 0;
+		virtual uint64_t seek(int64_t, int whence) = 0;
 		
 		/// Write at the position indicator and increment it
 		virtual void append(const vector<uint8_t> &value) = 0;
@@ -54,7 +54,7 @@ public:
 		/// fills the new space with zeroes.
 		virtual void resize(uint64_t new_size) = 0;
 		
-		virtual ~Partial() = 0;
+		virtual ~Partial() {}
 	};
 		
 	virtual ~Cache() {} 

@@ -121,10 +121,10 @@ partial(const ObjectId &obj_id, uint64_t bytesToReserve)
 		Sqlite::Statement::Resetter r1(*setPartialityStmt);
 		setPartialityStmt->bind(1, true);
 		setPartialityStmt->bind(2, keyify(obj_id));
-		if(removeStmt->step() != SQLITE_DONE)
+		if(setPartialityStmt->step() != SQLITE_DONE)
 			return Partial::Ptr(NULL);
 		
-		Partial::Ptr partialPtr(new SCPartial(*this));
+		Partial::Ptr partialPtr(new SCPartial(this, obj_id));
 		partialPtr->resize(bytesToReserve);
 		return partialPtr;
 	}
@@ -134,8 +134,8 @@ partial(const ObjectId &obj_id, uint64_t bytesToReserve)
 		Sqlite::Statement::Resetter resetWrite(*writeStmt);
 		vector<uint8_t> nothing;
 		writeStmt->bind(1, keyify(obj_id));
-		writeStmt->bind(2, nothing);
-		writeStmt->bind(3, nothing);
+		writeStmt->bindZeroBlob(2, bytesToReserve);
+		writeStmt->bindZeroBlob(3, MD5_DIGEST_LENGTH);
 		writeStmt->bind(4, bytesToReserve);
 		writeStmt->bind(5, false);
 		writeStmt->bind(6, time(NULL));
@@ -143,7 +143,7 @@ partial(const ObjectId &obj_id, uint64_t bytesToReserve)
 		if(writeStmt->step() != SQLITE_DONE)
 			return Partial::Ptr(NULL);
 		
-		Partial::Ptr partialPtr(new SCPartial(*this));
+		Partial::Ptr partialPtr(new SCPartial(this, obj_id));
 		partialPtr->resize(bytesToReserve);
 		return partialPtr;		
 	}

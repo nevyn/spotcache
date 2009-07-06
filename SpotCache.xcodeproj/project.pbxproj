@@ -14,6 +14,8 @@
 		051465790FF5D4E80011052B /* libcrypto.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 054195510FD869F2009BA8C6 /* libcrypto.dylib */; };
 		0514657A0FF5D4E80011052B /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 05FFEB560FD6F222007558B2 /* libsqlite3.dylib */; };
 		05C7AD66100249DC00349FC6 /* SqliteCache+Partial.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05C7AD65100249DC00349FC6 /* SqliteCache+Partial.cpp */; };
+		05C7AE44100288A400349FC6 /* Sqlite+Statement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05C7AE43100288A400349FC6 /* Sqlite+Statement.cpp */; };
+		05C7AE46100288BC00349FC6 /* Sqlite+Blob.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05C7AE45100288BC00349FC6 /* Sqlite+Blob.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +30,8 @@
 		054195740FD87537009BA8C6 /* Sqlite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Sqlite.h; sourceTree = "<group>"; };
 		054195750FD87537009BA8C6 /* Sqlite.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Sqlite.cpp; sourceTree = "<group>"; };
 		05C7AD65100249DC00349FC6 /* SqliteCache+Partial.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "SqliteCache+Partial.cpp"; sourceTree = "<group>"; };
+		05C7AE43100288A400349FC6 /* Sqlite+Statement.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "Sqlite+Statement.cpp"; sourceTree = "<group>"; };
+		05C7AE45100288BC00349FC6 /* Sqlite+Blob.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "Sqlite+Blob.cpp"; sourceTree = "<group>"; };
 		05EC2FFF0FFB8FFB0030DCF9 /* todo.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = todo.txt; sourceTree = "<group>"; };
 		05FFEB560FD6F222007558B2 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = /usr/lib/libsqlite3.dylib; sourceTree = "<absolute>"; };
 		05FFEB5A0FD6F269007558B2 /* SqliteCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SqliteCache.h; sourceTree = "<group>"; };
@@ -57,6 +61,8 @@
 				05C7AD65100249DC00349FC6 /* SqliteCache+Partial.cpp */,
 				054195740FD87537009BA8C6 /* Sqlite.h */,
 				054195750FD87537009BA8C6 /* Sqlite.cpp */,
+				05C7AE43100288A400349FC6 /* Sqlite+Statement.cpp */,
+				05C7AE45100288BC00349FC6 /* Sqlite+Blob.cpp */,
 			);
 			path = src;
 			sourceTree = "<group>";
@@ -173,6 +179,8 @@
 				051465750FF5D4DD0011052B /* SqliteCache.cpp in Sources */,
 				051465760FF5D4DD0011052B /* Sqlite.cpp in Sources */,
 				05C7AD66100249DC00349FC6 /* SqliteCache+Partial.cpp in Sources */,
+				05C7AE44100288A400349FC6 /* Sqlite+Statement.cpp in Sources */,
+				05C7AE46100288BC00349FC6 /* Sqlite+Blob.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
