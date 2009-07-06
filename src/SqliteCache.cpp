@@ -36,6 +36,7 @@ SqliteCache(const string &path, const vector<uint8_t> &encryption_key)
 	removeStmt = db.prepareFirst("delete from cache where object_id = ?;");
 	touchStmt = db.prepareFirst("update cache set accessed_at = ? where object_id = ?;");
 	sizeStmt = db.prepareFirst("select sum(datasize) from cache;");
+	setPartialityStmt = db.prepareFirst("update cache set completed = ? where object_id = ?");
 }
 
 SqliteCache::
@@ -99,64 +100,53 @@ readObject(const ObjectId &obj_id, vector<uint8_t> &result)
 bool
 SqliteCache::
 writeObject(const ObjectId &obj_id, 
-						const vector<uint8_t>	 &value,
-						bool completesInsertion) throw(AppendingToCompletedObjectException)
+						const vector<uint8_t>	 &value)
 {
-	CacheAvailability ca = objectIsAvailable(obj_id);
-	
-	if(ca == ObjectCached)
-		 throw AppendingToCompletedObjectException();
-	
-	ObjectId lookupKey = keyify(obj_id);
-
-	
-	if(ca == ObjectNotCached) {
-		if(!ensureFreeSpace(value.size()))
-			 return false;
+	::Cache::Partial::Ptr cacheObj = this->partial(obj_id, value.size());
+	if(!cacheObj.get())
+		return false;
+	cacheObj->writeAt(0, value);
+	return true;
+}
+::Cache::Partial::Ptr
+SqliteCache::
+partial(const ObjectId &obj_id, uint64_t bytesToReserve)
+{
+	CacheAvailability currentCA = objectIsAvailable(obj_id);
+	// If another Partial object exists for this obj_id, we won't interfere with it.
+	if(currentCA == ObjectPartiallyCached)
+		return Partial::Ptr(NULL);
+	// If the object already exists, mark it as partial and resize.
+	if(currentCA == ObjectCached) {
+		Sqlite::Statement::Resetter r1(*setPartialityStmt);
+		setPartialityStmt->bind(1, true);
+		setPartialityStmt->bind(2, keyify(obj_id));
+		if(removeStmt->step() != SQLITE_DONE)
+			return Partial::Ptr(NULL);
 		
-		vector<uint8_t> valueHash = hash(value);
-
-		Sqlite::Statement::Resetter resetWrite(*writeStmt);
-		writeStmt->bind(1, lookupKey);
-		writeStmt->bind(2, value);
-		writeStmt->bind(3, valueHash);
-		writeStmt->bind(4, value.size());
-		writeStmt->bind(5, completesInsertion);
-		writeStmt->bind(6, time(NULL));
-		
-		return writeStmt->step() == SQLITE_DONE;
-
-	} else if(ca == ObjectPartiallyCached) {
-		
-		Sqlite::Statement::Resetter resetRead(*readStmt);
-		
-		// TODO: Should update the column using the blob api, not waste all this mem
-		readStmt->bind(1, lookupKey);
-		readStmt->step();
-		int32_t currentLen = readStmt->byteLength(0);
-		int32_t resultLen = currentLen + value.size();
-		vector<uint8_t> newData(resultLen);
-		readStmt->column(0, newData);
-		std::copy(value.begin(), value.end(), newData.begin()+currentLen);
-		
-		eraseObject(obj_id);
-		
-		vector<uint8_t> newDataHash = hash(newData);
-		
-		Sqlite::Statement::Resetter resetWrite(*writeStmt);
-		writeStmt->bind(1, lookupKey);
-		writeStmt->bind(2, newData);
-		writeStmt->bind(3, newDataHash);
-		writeStmt->bind(4, newData.size());
-		writeStmt->bind(5, completesInsertion);
-		writeStmt->bind(6, time(NULL));
-		
-		return writeStmt->step() == SQLITE_DONE;
-		
-	} else {
-		throw std::logic_error("should not reach this point");
+		Partial::Ptr partialPtr(new SCPartial(*this));
+		partialPtr->resize(bytesToReserve);
+		return partialPtr;
 	}
-
+	// The final possible case is if the object doesn't exist;
+	// create it as partial and resize.
+	{
+		Sqlite::Statement::Resetter resetWrite(*writeStmt);
+		vector<uint8_t> nothing;
+		writeStmt->bind(1, keyify(obj_id));
+		writeStmt->bind(2, nothing);
+		writeStmt->bind(3, nothing);
+		writeStmt->bind(4, bytesToReserve);
+		writeStmt->bind(5, false);
+		writeStmt->bind(6, time(NULL));
+		
+		if(writeStmt->step() != SQLITE_DONE)
+			return Partial::Ptr(NULL);
+		
+		Partial::Ptr partialPtr(new SCPartial(*this));
+		partialPtr->resize(bytesToReserve);
+		return partialPtr;		
+	}
 }
 
 bool

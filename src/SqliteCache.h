@@ -21,6 +21,23 @@ class SqliteCache : public Cache {
 public:
 	// --- Types ---
 	
+	class SCPartial : public Cache::Partial {
+		friend class SqliteCache;
+	public:		
+		uint64_t positionIndicator();
+		uint64_t seek(uint64_t, int whence);
+		
+		void append(const vector<uint8_t> &value);
+		void writeAt(uint64_t offset, const vector<uint8_t> &value);
+		
+		void resize(uint64_t new_size);
+		
+		virtual ~SCPartial();
+	protected:
+		SCPartial();
+		SCPartial(SqliteCache &cache);
+		
+	};
 	// --- Methods ---
 	~SqliteCache();
 	
@@ -28,9 +45,8 @@ public:
 	bool hasObject(const ObjectId &obj_id); 
 	CacheAvailability objectIsAvailable(const ObjectId &obj_id);
 	bool readObject(const ObjectId &obj_id, vector<uint8_t> &result);
-	bool writeObject(const ObjectId &obj_id, 
-	                         const vector<uint8_t>	 &value,
-													 bool completesInsertion = true) throw(AppendingToCompletedObjectException); 
+	bool writeObject(const ObjectId &obj_id, const vector<uint8_t>	 &value);
+	Partial::Ptr partial(const ObjectId &obj_id, uint64_t bytesToReserve);
 	bool eraseObject(const ObjectId &obj_id);
 	virtual void setMaxSize(uint64_t max_size); 
 	virtual uint64_t getCurrentSize();
@@ -61,7 +77,7 @@ protected:
 	
 	Sqlite db;
 	Sqlite::Statement::Ptr hasStmt, readStmt, writeStmt, removeStmt, touchStmt,
-												 sizeStmt;
+												 sizeStmt, setPartialityStmt;
 	
 	uint64_t max_size;
 };

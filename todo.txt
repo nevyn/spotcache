@@ -3,3 +3,6 @@
 - prune old data when cache grows too big
 - Save maxSize somehow
 - windows port
+- Partials need to be rethought
+	- Use an object to represent a partial?
+	- What happens if we're writing a partial and 
