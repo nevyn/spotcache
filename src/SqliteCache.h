@@ -97,8 +97,8 @@ protected:
 	Sqlite::Statement::Ptr hasStmt, readStmt, writeStmt, removeStmt, touchStmt,
 												 sizeStmt, setCompletedStmt, findRowidStmt, chksumStmt,
 												 sizeRemovableStmt, oldestRemovablesStmt, 
-												 removeByRowidStmt;
-	
+												 removeByRowidStmt, specificSizeStmt;
+	uint64_t current_size;
 	uint64_t max_size;
 };
 

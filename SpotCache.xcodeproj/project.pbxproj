@@ -41,7 +41,7 @@
 		05C7AD65100249DC00349FC6 /* SqliteCache+Partial.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "SqliteCache+Partial.cpp"; sourceTree = "<group>"; };
 		05C7AE43100288A400349FC6 /* Sqlite+Statement.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "Sqlite+Statement.cpp"; sourceTree = "<group>"; };
 		05C7AE45100288BC00349FC6 /* Sqlite+Blob.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "Sqlite+Blob.cpp"; sourceTree = "<group>"; };
-		05C7B12F1003D35B00349FC6 /* PerformanceTest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; name = PerformanceTest; path = build/Debug/PerformanceTest; sourceTree = "<group>"; };
+		05C7B12F1003D35B00349FC6 /* PerformanceTest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = PerformanceTest; sourceTree = BUILT_PRODUCTS_DIR; };
 		05C7B13E1003D38C00349FC6 /* performancetest.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = performancetest.cc; sourceTree = "<group>"; };
 		05C7B1731003DF1200349FC6 /* index.markdown */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = index.markdown; path = docs/index.markdown; sourceTree = "<group>"; };
 		05EC2FFF0FFB8FFB0030DCF9 /* todo.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = todo.txt; sourceTree = "<group>"; };

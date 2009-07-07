@@ -68,7 +68,7 @@ void perftest(int objCount, int objSize) {
 }
 
 int main() {
-	/*printf("By size\n");
+	printf("By size\n");
 	perftest(500, 100);
 	perftest(500, 1000);
 	perftest(500, 2000);
@@ -84,7 +84,7 @@ int main() {
 	perftest(2000,  1000);
 	perftest(5000,  1000);
 	perftest(10000, 1000);
-	perftest(20000, 1000);*/
+	perftest(20000, 1000);
 	perftest(50000, 1000);
 	
 	
