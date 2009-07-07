@@ -82,7 +82,7 @@ protected:
 	/// Deletes cache objects if needed to make sure cache doesn't use more than
 	/// maxUsageByteCount bytes.
 	/// @returns false if that's not possible without exceeding maxSize.
-	bool ensureMaxUsage(int64_t maxUsageByteCount);
+	bool ensureMaxUsage(uint64_t maxUsageByteCount);
 	
 	/// The amount of space we can free up (which excludes locked objects such
 	/// as partials)

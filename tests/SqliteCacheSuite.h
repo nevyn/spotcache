@@ -152,13 +152,22 @@ public:
 		TS_ASSERT( cache->hasObject(key2) );
 		
 		TS_ASSERT_EQUALS( cache->getCurrentSize(), 4 );
+		
+		// Should push that object out as well
+		cache->setMaxSize(3); 
+		TS_ASSERT( ! cache->hasObject(key2) );
+		
+		TS_ASSERT_EQUALS( cache->getCurrentSize(), 0 );
+		
+		// Restore normality
+		cache->setMaxSize(ULONG_LONG_MAX); 
 	}
 	
 	// End in-order dependency
 	
 	void testCorruptingStore() {
 		Cache::ObjectId someKey = "this'll become corrupted";
-		cache->writeObject(someKey, someKey);
+		TS_ASSERT( cache->writeObject(someKey, someKey) == true);
 		
 		vector<uint8_t> value;
 		

@@ -248,17 +248,16 @@ bool
 SqliteCache::
 ensureFreeSpace(uint64_t freeByteCount)
 {
+	// Required free bigger than max_usage? Impossible to fulfill
+	if(freeByteCount > max_size)
+		return false;
 	return ensureMaxUsage(max_size-freeByteCount);
 }
 
 bool 
 SqliteCache::
-ensureMaxUsage(int64_t maxUsageByteCount)
-{
-	// Required free bigger than max_usage? Impossible to fulfill
-	if(maxUsageByteCount < 0)
-		return false;
-	
+ensureMaxUsage(uint64_t maxUsageByteCount)
+{	
 	uint64_t currentSize = getCurrentSize();
 	// Enough space is already free?
 	if(currentSize <= maxUsageByteCount)
