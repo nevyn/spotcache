@@ -79,6 +79,7 @@ public:
 	/// become corrupt, 
 	/// if the contents has been tampered with by a user, or if the file 
 	/// has been deleted. 
+	/// This will return the object even if it is incomplete.
 	virtual bool readObject(const ObjectId &obj_id, vector<uint8_t> &result)=0; 
 	
 	/// Write a complete object to the cache.

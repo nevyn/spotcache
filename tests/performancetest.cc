@@ -24,31 +24,40 @@ void perftest(int objCount, int objSize) {
 
 	double start = getTime();
 	
+	vector<uint8_t> value(objSize);
+	
 	for(int i = 0; i < objCount; i++) {
 		char key[9];
 		sprintf(key, "key%d", i);
 		
-		vector<uint8_t> value(objSize);
-		std::copy(key, key+9, value.begin()); 
-		
-		cache->writeObject(key, value);
+		assert(cache->writeObject(key, value));
 	}
 	
 	double afterCreate = getTime();
 	
 	vector<uint8_t> oneFetched;
-	assert(cache->readObject("key3", oneFetched));
+	for(int i = 0; i < objCount; i++) {
+		char key[9];
+		sprintf(key, "key%d", i);
+		
+		assert(cache->readObject(key, oneFetched));
+	}
 	
 	double afterFetch = getTime();
 	
 	{
 		double timeToCreate = afterCreate-start;
-		double timeToFetch = afterFetch-start-timeToCreate;
 		double creationTimePerObj = timeToCreate/objCount;
+		double creationTimePerByte = creationTimePerObj/objSize;
+		
+		double timeToFetch = afterFetch-start-timeToCreate;
+		double fetchTimePerObj = timeToFetch/objCount;
+		double fetchTimePerByte = fetchTimePerObj/objSize;
 #if 1
-		printf("%7d objs @ %7db: create(%3.4fs/%3.4fs) fetch(%3.4fs): %s\n", 
-					 objCount, objSize, timeToCreate, creationTimePerObj, timeToFetch,
-					 &(*oneFetched.begin()));
+		printf("%7d objs @ %7db: create(%.5fs/%.5fs/%fs) fetch(%.5fs/%.5fs/%fs)\n", 
+					 objCount, objSize, 
+					 timeToCreate, creationTimePerObj, creationTimePerByte,
+					 timeToFetch, fetchTimePerObj, fetchTimePerByte);
 #else
 		printf("%d\t%f\n", objCount, creationTimePerObj);
 #endif
@@ -59,24 +68,23 @@ void perftest(int objCount, int objSize) {
 }
 
 int main() {
+	/*printf("By size\n");
 	perftest(500, 100);
 	perftest(500, 1000);
 	perftest(500, 2000);
 	perftest(500, 5000);
 	perftest(500, 10000);
+	perftest(500, 20000);
+	perftest(500, 50000);
 
-	perftest(10, 200);
-	perftest(100, 200);
-	perftest(1000, 200);
-	
-	perftest(10, 1000);
-	perftest(100, 1000);
-	perftest(1000, 1000);
-	
-	
-	perftest(10000, 200);
-	perftest(50000, 200);
+	printf("By object count\n");
+	perftest(10,    1000);
+	perftest(100,   1000);
+	perftest(1000,  1000);
+	perftest(2000,  1000);
+	perftest(5000,  1000);
 	perftest(10000, 1000);
+	perftest(20000, 1000);*/
 	perftest(50000, 1000);
 	
 	
