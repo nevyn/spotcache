@@ -25,7 +25,7 @@ static string cacheSchema =
 
 SqliteCache::
 SqliteCache(const string &path, const vector<uint8_t> &encryption_key)
-: db(path), key(encryption_key)
+: db(path), key(encryption_key), max_size(ULONG_LONG_MAX)
 {
 	db.run(cacheSchema);
 	hasStmt = db.prepareFirst("select completed from cache where object_id = ?;");
@@ -34,9 +34,12 @@ SqliteCache(const string &path, const vector<uint8_t> &encryption_key)
 	removeStmt = db.prepareFirst("delete from cache where object_id = ?;");
 	touchStmt = db.prepareFirst("update cache set accessed_at = ? where object_id = ?;");
 	sizeStmt = db.prepareFirst("select sum(datasize) from cache;");
+	sizeRemovableStmt = db.prepareFirst("select sum(datasize) from cache where completed = 1;");
 	setCompletedStmt = db.prepareFirst("update cache set completed = ? where object_id = ?");
 	findRowidStmt = db.prepareFirst("select rowid from cache where object_id = ?;");
 	chksumStmt = db.prepareFirst("update cache set datahash = ? where object_id = ?;");
+	oldestRemovablesStmt = db.prepareFirst("select rowid, datasize from cache where completed = 1 order by accessed_at asc;");
+	removeByRowidStmt = db.prepareFirst("delete from cache where rowid = ?;");
 }
 
 SqliteCache::
@@ -111,6 +114,7 @@ writeObject(const ObjectId &obj_id,
 	cacheObj->write(value);
 	return true;
 }
+
 ::Cache::Partial::Ptr
 SqliteCache::
 partial(const ObjectId &obj_id, uint64_t bytesToReserve)
@@ -130,8 +134,13 @@ partial(const ObjectId &obj_id, uint64_t bytesToReserve)
 		Partial::Ptr partialPtr(new SCPartial(this, obj_id));
 		return partialPtr;
 	}
-	// The final possible case is if the object doesn't exist;
-	// create it as partial and resize.
+	// The final possible case is if the object doesn't exist.
+	
+	// Make sure it'll fit
+	if(!ensureFreeSpace(bytesToReserve))
+		return Partial::Ptr(NULL);
+	
+	// If it will, create the object, its partial, and reserve space.
 	{
 		Sqlite::Statement::Resetter resetWrite(*writeStmt);
 		vector<uint8_t> nothing;
@@ -166,10 +175,9 @@ setMaxSize(uint64_t max_size_)
 	if(0 == max_size)
 		db.run("delete from cache;");
 	
-	// If we're shrinking, 
+	// If we're shrinking, we might need to free up some space
 	if(max_size_ < max_size)
-		ensureMaxUsage(max_size);
-	// TODO
+		ensureMaxUsage(max_size_);
 	
 	max_size = max_size_;
 	
@@ -188,6 +196,15 @@ getCurrentSize()
 	sizeStmt->step();
 	return sizeStmt->int64Column(0);
 }
+uint64_t
+SqliteCache::
+getRemovableSize()
+{
+	Sqlite::Statement::Resetter r1(*sizeRemovableStmt);
+	sizeRemovableStmt->step();
+	return sizeRemovableStmt->int64Column(0);	
+}
+
 
 time_t
 SqliteCache::
@@ -236,8 +253,41 @@ ensureFreeSpace(uint64_t freeByteCount)
 
 bool 
 SqliteCache::
-ensureMaxUsage(uint64_t maxUsageByteCount)
+ensureMaxUsage(int64_t maxUsageByteCount)
 {
+	// Required free bigger than max_usage? Impossible to fulfill
+	if(maxUsageByteCount < 0)
+		return false;
+	
+	uint64_t currentSize = getCurrentSize();
+	// Enough space is already free?
+	if(currentSize <= maxUsageByteCount)
+		return true;
+	
+	// Okay, we need to free stuff.
+	
+	// Perhaps even freeing wouldn't help, because
+	// we have big partials (which we may not purge)?
+	if(currentSize-getRemovableSize() > maxUsageByteCount)
+		return false;
+	
+	// Let's start purging.
+	Sqlite::Statement::Resetter r1(*oldestRemovablesStmt);
+	do {
+		if(oldestRemovablesStmt->step() == SQLITE_DONE)
+			return false; // Huh, we are not done, but out of objects to remove!
+		
+		int64_t rowid = oldestRemovablesStmt->int64Column(0);
+		int64_t freedBytes = oldestRemovablesStmt->int64Column(1);
+		
+		Sqlite::Statement::Resetter r2(*removeByRowidStmt);
+		removeByRowidStmt->bind(1, rowid);
+		removeByRowidStmt->step();
+		
+		currentSize -= freedBytes;
+
+	} while(currentSize > maxUsageByteCount);
+	
 	return true;
 }
 

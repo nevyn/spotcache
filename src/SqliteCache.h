@@ -82,7 +82,11 @@ protected:
 	/// Deletes cache objects if needed to make sure cache doesn't use more than
 	/// maxUsageByteCount bytes.
 	/// @returns false if that's not possible without exceeding maxSize.
-	bool ensureMaxUsage(uint64_t maxUsageByteCount);
+	bool ensureMaxUsage(int64_t maxUsageByteCount);
+	
+	/// The amount of space we can free up (which excludes locked objects such
+	/// as partials)
+	virtual uint64_t getRemovableSize();
 	
 	static vector<uint8_t> hash(const vector<uint8_t> &data);
 	// --- Ivars ---
@@ -91,7 +95,9 @@ protected:
 	
 	Sqlite db;
 	Sqlite::Statement::Ptr hasStmt, readStmt, writeStmt, removeStmt, touchStmt,
-												 sizeStmt, setCompletedStmt, findRowidStmt, chksumStmt;
+												 sizeStmt, setCompletedStmt, findRowidStmt, chksumStmt,
+												 sizeRemovableStmt, oldestRemovablesStmt, 
+												 removeByRowidStmt;
 	
 	uint64_t max_size;
 };
