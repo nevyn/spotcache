@@ -1,8 +1,16 @@
-- use blob functions on resize instead of read/delete/write
+√ use blob functions on resize instead of read/delete/write
 - encryption of the data
 - prune old data when cache grows too big
 - Save maxSize somehow
 - windows port
-- Partials need to be rethought
-	- Use an object to represent a partial?
-	- What happens if we're writing a partial and 
+√ Partials need to be rethought
+	√ Use an object to represent a partial?
+	- What happens if we're writing a partial and cache suddenly needs to be
+	  pruned because a big object is being added? possibility: never prune
+		partials.
+- write design rationale
+	- what was my old api for partials? why did I abandon it?
+	- why is my sqlite c++ wrapper so C-ish? (e g SQLITE_ROW)
+	- why sqlite and not a file store + hash table?
+		- did I actually win anything with sqlite?
+- make sure everything's properly documented (perhaps doxygen it)

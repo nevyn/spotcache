@@ -41,19 +41,27 @@ public:
 		typedef std::auto_ptr<Partial> Ptr;
 
 		/// A Partial saves a position indicator similar to how fread/fwrite works.
+		/// This is handy for just appending data as it comes in from e g network.
 		virtual uint64_t positionIndicator() = 0;
 		/// Like fseek()
 		virtual uint64_t seek(int64_t, int whence) = 0;
 		
 		/// Write at the position indicator and increment it
 		virtual void append(const vector<uint8_t> &value) = 0;
-		/// Write at offset
-		virtual void writeAt(uint64_t offset, const vector<uint8_t> &value) = 0;
 		
-		/// Resizes the cache object. If smaller than current, truncates. If bigger,
-		/// fills the new space with zeroes.
-		virtual void resize(uint64_t new_size) = 0;
-		
+		/// The below methods do not use the position indicator.
+		/// If bytesToRead is not given, size() bytes are read.
+		/// Obvious implementations given for the non-abstract methods.
+		virtual vector<uint8_t> read(int64_t bytesToRead=-1, int64_t offset=0);
+		virtual void read(vector<uint8_t>::iterator destination, 
+											int32_t bytesToRead=-1,
+											int32_t offset = 0) = 0;
+		virtual void write(const vector<uint8_t> &source, int64_t offset = 0);
+		virtual void write(const vector<uint8_t>::const_iterator from,
+											 const vector<uint8_t>::const_iterator to,
+											 int64_t destOffset = 0) = 0;
+		virtual uint64_t size() = 0;
+
 		virtual ~Partial() {}
 	};
 		
@@ -84,7 +92,7 @@ public:
 	/// its accessors.
 	/// @arg obj_id If this object already exists, it's turned into a
 	///							partial without otherwise being overwritten
-	/// @arg bytesToReserve How much space to reserve
+	/// @arg bytesToReserve How much space to reserve. Ignored if given an existing object.
 	/// @returns a null-pointed autoptr for the same reasons writeObject might,
 	///					 fail, and also if there is already a Partial for this object.
 	/// @returns autoptr to Partial object on success.

@@ -59,9 +59,11 @@ public:
 		TS_ASSERT(!success);
 	}
 	
+	Cache::Partial::Ptr partial;
+	
 	void testWritePartial() {
-		//bool success = cache->writeObject(key, key, false);
-		//TS_ASSERT(success);
+		partial = cache->partial(key, 8);
+		partial->append(key);
 	}
 	
 	void testPartialAvailability() {
@@ -74,23 +76,34 @@ public:
 	}
 	
 	void testReadingPartial() {
-		vector<uint8_t> partial;
-		bool success = cache->readObject(key, partial);
+		vector<uint8_t> sofar;
+		bool success = cache->readObject(key, sofar);
 		TS_ASSERT(success);
-		TS_ASSERT_EQUALS(partial, key);
+		
+		vector<uint8_t> expected(8);
+		std::copy(key.begin(), key.end(), expected.begin());
+
+		TS_ASSERT_EQUALS(sofar, expected);
+	}
+	
+	void testTwoPartialsOneObject() {
+		Cache::Partial::Ptr partial2 = cache->partial(key, 8);
+		TS_ASSERT(partial2.get() == NULL);
 	}
 	
 	void testFinalizingPartial() {
-		//bool success = cache->writeObject(key, key, true);
-		//TS_ASSERT(success);
+		partial->append(key);
+		// Remove the partial object, effectively removing the 'partial'
+		// state from the cache object.
+		partial.reset();
 		
-		//vector<uint8_t> complete;
-		//success = cache->readObject(key, complete);
-		//TS_ASSERT(success);
+		vector<uint8_t> complete;
+		bool success = cache->readObject(key, complete);
+		TS_ASSERT(success);		
 		
 		vector<uint8_t> expected = key;
 		expected.insert(expected.end(), key.begin(), key.end());
-		//TS_ASSERT_EQUALS(expected, complete);
+		TS_ASSERT_EQUALS(expected, complete);
 	}
 	
 	void testCompleteAvailability() {
@@ -101,6 +114,18 @@ public:
 	
 	void testHasObjectOfCompleteObject() {
 		TS_ASSERT( cache->hasObject(key) );
+	}
+	
+	void testTurningExistingObjectIntoPartial() {
+		Cache::CacheAvailability ca = cache->objectIsAvailable(key);
+		TS_ASSERT_EQUALS(ca, Cache::ObjectCached);
+		{
+			Cache::Partial::Ptr partial2 = cache->partial(key, 8);
+			Cache::CacheAvailability ca2 = cache->objectIsAvailable(key);
+			TS_ASSERT_EQUALS(ca2, Cache::ObjectPartiallyCached);			
+		}
+		Cache::CacheAvailability ca3 = cache->objectIsAvailable(key);
+		TS_ASSERT_EQUALS(ca3, Cache::ObjectCached);
 	}
 	
 		

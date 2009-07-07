@@ -30,21 +30,24 @@ public:
 		uint64_t seek(int64_t, int whence);
 		
 		void append(const vector<uint8_t> &value);
-		void writeAt(uint64_t offset, const vector<uint8_t> &value);
-		
-		void resize(uint64_t new_size);
+		void read(vector<uint8_t>::iterator destination, 
+											int32_t bytesToRead=-1,
+											int32_t offset = 0);
+		void write(const vector<uint8_t>::const_iterator from,
+											 const vector<uint8_t>::const_iterator to,
+											 int64_t destOffset = 0);
+		uint64_t size();
 		
 		~SCPartial();
 	protected:
 		SCPartial(SqliteCache *cache, const ObjectId &obj_id);
 		
-		uint64_t size();
 	private:
 		SCPartial();
 		uint64_t _positionIndicator;
 		SqliteCache * const cache;
 		const ObjectId obj_id;
-		sqlite3_blob *blob;
+		Sqlite::Blob::Ptr blob;
 	};
 	// --- Methods ---
 	~SqliteCache();
@@ -81,16 +84,17 @@ protected:
 	/// @returns false if that's not possible without exceeding maxSize.
 	bool ensureMaxUsage(uint64_t maxUsageByteCount);
 	
-	
+	static vector<uint8_t> hash(const vector<uint8_t> &data);
 	// --- Ivars ---
 protected:
 	const vector<uint8_t> key;
 	
 	Sqlite db;
 	Sqlite::Statement::Ptr hasStmt, readStmt, writeStmt, removeStmt, touchStmt,
-												 sizeStmt, setPartialityStmt;
+												 sizeStmt, setCompletedStmt, findRowidStmt, chksumStmt;
 	
 	uint64_t max_size;
 };
+
 
 #endif

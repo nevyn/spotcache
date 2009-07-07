@@ -104,7 +104,7 @@ public:
 		void write(const vector<uint8_t> &source, int32_t offset = 0) throw(Error);
 		void write(const vector<uint8_t>::const_iterator from,
 							 const vector<uint8_t>::const_iterator to,
-							 int32_t destOffset) throw(Error);
+							 int32_t destOffset = 0) throw(Error);
 	protected:
 		Blob(Sqlite &parent,
 							const string &table, const string &columnName, int64_t rowid);

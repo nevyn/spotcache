@@ -19,19 +19,38 @@ SqliteCache::SCPartial::
 SCPartial(SqliteCache *cache_, const ObjectId &obj_id_)
 : cache(cache_), _positionIndicator(0), obj_id(obj_id_)
 {
+	Sqlite::Statement::Resetter r1(*cache->findRowidStmt);
+	cache->findRowidStmt->bind(1, cache->keyify(obj_id));
+	int status = cache->findRowidStmt->step();
+	if(status != SQLITE_ROW)
+		throw std::logic_error("Making partial of object that doesn't exist; this should be impossible");
+	int64_t rowid = cache->findRowidStmt->int64Column(0);
+	
+	blob = cache->db.blob("cache", "data", rowid);
 }
 
 SqliteCache::SCPartial::
 ~SCPartial()
 {
+	// Update the checksum to match the new data
+	vector<uint8_t> everything = blob->read();
+	vector<uint8_t> datahash = SqliteCache::hash(everything);
+	
+	Sqlite::Statement::Resetter r1(*(cache->chksumStmt));
+	cache->chksumStmt->bind(1, datahash);
+	cache->chksumStmt->bind(2, cache->keyify(obj_id));
+	cache->chksumStmt->step();
+	
+	// Touch the object
+	Sqlite::Statement::Resetter resetTouch(*cache->touchStmt);
+	cache->touchStmt->bind(1, time(NULL));
+	cache->touchStmt->step();	
+	
 	// We're done with the partial, mark it as such
-	
-	// TODO: Write the checksum!
-	
-	Sqlite::Statement::Resetter r1(*(cache->setPartialityStmt));
-	cache->setPartialityStmt->bind(1, true);
-	cache->setPartialityStmt->bind(2, cache->keyify(obj_id));
-	cache->setPartialityStmt->step();
+	Sqlite::Statement::Resetter r2(*(cache->setCompletedStmt));
+	cache->setCompletedStmt->bind(1, true);
+	cache->setCompletedStmt->bind(2, cache->keyify(obj_id));
+	cache->setCompletedStmt->step();
 }
 
 uint64_t 
@@ -65,28 +84,32 @@ void
 SqliteCache::SCPartial::
 append(const vector<uint8_t> &value)
 {
-	writeAt(_positionIndicator, value);
+	write(value.begin(), value.end(), _positionIndicator);
 	_positionIndicator += value.size();
 }
+
 void
 SqliteCache::SCPartial::
-writeAt(uint64_t offset, const vector<uint8_t> &value)
+read(vector<uint8_t>::iterator destination, 
+		 int32_t bytesToRead,
+		 int32_t offset)
 {
-	
-
+	blob->read(destination, bytesToRead, offset);
 }
 
-void
+void 
 SqliteCache::SCPartial::
-resize(uint64_t new_size)
+write(const vector<uint8_t>::const_iterator from,
+			const vector<uint8_t>::const_iterator to,
+			int64_t destOffset)
 {
-	
+	blob->write(from, to, destOffset);
 }
 
 uint64_t
 SqliteCache::SCPartial::
 size()
 {
-	return 0;
+	return blob->size();
 }
 

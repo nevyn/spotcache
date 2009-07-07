@@ -11,8 +11,6 @@
 #include <openssl/md5.h>
 #include <algorithm>
 
-vector<uint8_t> hash(const vector<uint8_t> &data);
-
 /// Schema
 static string cacheSchema = 
 "create table if not exists cache ( "
@@ -31,12 +29,14 @@ SqliteCache(const string &path, const vector<uint8_t> &encryption_key)
 {
 	db.run(cacheSchema);
 	hasStmt = db.prepareFirst("select completed from cache where object_id = ?;");
-	readStmt = db.prepareFirst("select data, datahash from cache where object_id = ?;");
+	readStmt = db.prepareFirst("select data, datahash, completed from cache where object_id = ?;");
 	writeStmt = db.prepareFirst("insert into cache (object_id, data, datahash, datasize, completed, accessed_at) values (?, ?, ?, ?, ?, ?);");
 	removeStmt = db.prepareFirst("delete from cache where object_id = ?;");
 	touchStmt = db.prepareFirst("update cache set accessed_at = ? where object_id = ?;");
 	sizeStmt = db.prepareFirst("select sum(datasize) from cache;");
-	setPartialityStmt = db.prepareFirst("update cache set completed = ? where object_id = ?");
+	setCompletedStmt = db.prepareFirst("update cache set completed = ? where object_id = ?");
+	findRowidStmt = db.prepareFirst("select rowid from cache where object_id = ?;");
+	chksumStmt = db.prepareFirst("update cache set datahash = ? where object_id = ?;");
 }
 
 SqliteCache::
@@ -80,19 +80,22 @@ readObject(const ObjectId &obj_id, vector<uint8_t> &result)
 	if( ! readStmt->hasData())
 		return false;
 	
-	
 	readStmt->column(0, result);
-	vector<uint8_t> recordedHash;
-	readStmt->column(1, recordedHash);
 	
-	vector<uint8_t> currentHash = hash(result);
-	
-	if(currentHash != recordedHash)
-		return false;
+	bool completed = readStmt->intColumn(2);
+	if(completed) {
+		vector<uint8_t> recordedHash;
+		readStmt->column(1, recordedHash);
+		
+		vector<uint8_t> currentHash = SqliteCache::hash(result);
+		
+		if(currentHash != recordedHash)
+			return false;		
+	}
 	
 	Sqlite::Statement::Resetter resetTouch(*touchStmt);
 	touchStmt->bind(1, time(NULL));
-	touchStmt->step();	
+	touchStmt->step();
 	
 	return true;
 }
@@ -105,7 +108,7 @@ writeObject(const ObjectId &obj_id,
 	::Cache::Partial::Ptr cacheObj = this->partial(obj_id, value.size());
 	if(!cacheObj.get())
 		return false;
-	cacheObj->writeAt(0, value);
+	cacheObj->write(value);
 	return true;
 }
 ::Cache::Partial::Ptr
@@ -118,14 +121,13 @@ partial(const ObjectId &obj_id, uint64_t bytesToReserve)
 		return Partial::Ptr(NULL);
 	// If the object already exists, mark it as partial and resize.
 	if(currentCA == ObjectCached) {
-		Sqlite::Statement::Resetter r1(*setPartialityStmt);
-		setPartialityStmt->bind(1, true);
-		setPartialityStmt->bind(2, keyify(obj_id));
-		if(setPartialityStmt->step() != SQLITE_DONE)
+		Sqlite::Statement::Resetter r1(*setCompletedStmt);
+		setCompletedStmt->bind(1, false);
+		setCompletedStmt->bind(2, keyify(obj_id));
+		if(setCompletedStmt->step() != SQLITE_DONE)
 			return Partial::Ptr(NULL);
 		
 		Partial::Ptr partialPtr(new SCPartial(this, obj_id));
-		partialPtr->resize(bytesToReserve);
 		return partialPtr;
 	}
 	// The final possible case is if the object doesn't exist;
@@ -144,7 +146,6 @@ partial(const ObjectId &obj_id, uint64_t bytesToReserve)
 			return Partial::Ptr(NULL);
 		
 		Partial::Ptr partialPtr(new SCPartial(this, obj_id));
-		partialPtr->resize(bytesToReserve);
 		return partialPtr;		
 	}
 }
@@ -204,6 +205,7 @@ accessTimeOfObject(const ObjectId &obj_id)
 // Private
 
 vector<uint8_t>
+SqliteCache::
 hash(const vector<uint8_t> &data)
 {
 	vector<uint8_t> hashed(MD5_DIGEST_LENGTH);
@@ -213,6 +215,7 @@ hash(const vector<uint8_t> &data)
 	return hashed;
 }
 
+
 Cache::ObjectId 
 SqliteCache::
 keyify(const ObjectId &obj_id)
@@ -221,7 +224,7 @@ keyify(const ObjectId &obj_id)
 	std::copy(key.begin(), key.end(), saltedObjectID.begin());
 	std::copy(obj_id.begin(), obj_id.end(), saltedObjectID.begin()+key.size());
 
-	return hash(saltedObjectID);
+	return SqliteCache::hash(saltedObjectID);
 }
 
 bool

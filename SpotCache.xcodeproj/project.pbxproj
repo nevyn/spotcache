@@ -54,8 +54,8 @@
 		050330260FD4663F0034612D /* src */ = {
 			isa = PBXGroup;
 			children = (
-				050330270FD4663F0034612D /* Cache.cc */,
 				050330280FD4663F0034612D /* Cache.h */,
+				050330270FD4663F0034612D /* Cache.cc */,
 				05FFEB5A0FD6F269007558B2 /* SqliteCache.h */,
 				05FFEB5B0FD6F269007558B2 /* SqliteCache.cpp */,
 				05C7AD65100249DC00349FC6 /* SqliteCache+Partial.cpp */,
