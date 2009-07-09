@@ -29,7 +29,7 @@ SqliteCache(const string &path, const vector<uint8_t> &encryption_key)
 {
 	db.run(cacheSchema);
 	hasStmt = db.prepareFirst("select completed from cache where object_id = ?;");
-	readStmt = db.prepareFirst("select data, datahash, completed from cache where object_id = ?;");
+	readStmt = db.prepareFirst("select data, datahash, completed, datasize from cache where object_id = ?;");
 	writeStmt = db.prepareFirst("insert into cache (object_id, data, datahash, datasize, completed, accessed_at) values (?, ?, ?, ?, ?, ?);");
 	removeStmt = db.prepareFirst("delete from cache where object_id = ?;");
 	touchStmt = db.prepareFirst("update cache set accessed_at = ? where object_id = ?;");
@@ -88,6 +88,7 @@ readObject(const ObjectId &obj_id, vector<uint8_t> &result)
 		return false;
 	
 	readStmt->column(0, result);
+	int64_t size = readStmt->int64Column(3);
 	
 	bool completed = readStmt->intColumn(2);
 	if(completed) {
@@ -99,6 +100,9 @@ readObject(const ObjectId &obj_id, vector<uint8_t> &result)
 		if(currentHash != recordedHash)
 			return false;		
 	}
+	
+	decrypt(result.begin(), result.begin() + size);
+	
 	
 	Sqlite::Statement::Resetter resetTouch(*touchStmt);
 	touchStmt->bind(1, time(NULL));
@@ -257,6 +261,30 @@ hash(const vector<uint8_t> &data)
 			data.size(),
 			&(*hashed.begin()));
 	return hashed;
+}
+
+// How's THIS for cryptographic weakness!
+void
+SqliteCache::
+ encrypt(vector<uint8_t>::iterator from,  vector<uint8_t>::iterator to, uint64_t offset)
+{
+	for(vector<uint8_t>::iterator it = from;
+			it != to;
+			it++, offset++)
+	{
+		*it += key[offset % key.size()];
+	}
+}
+void
+SqliteCache::
+decrypt(vector<uint8_t>::iterator from,  vector<uint8_t>::iterator to, uint64_t offset)
+{
+	for(vector<uint8_t>::iterator it = from;
+			it != to;
+			it++, offset++)
+	{
+		*it -= key[offset % key.size()];
+	}
 }
 
 

@@ -80,10 +80,14 @@ public:
 		bool success = cache->readObject(key, sofar);
 		TS_ASSERT(success);
 		
-		vector<uint8_t> expected(8);
-		std::copy(key.begin(), key.end(), expected.begin());
+		TS_ASSERT_EQUALS(sofar.size(), 8);
+		
+		// Contents of the range we haven't written to yet is undefined; cut out
+		// the beginning.
+		vector<uint8_t> first4(sofar.begin(), sofar.begin()+4);
+		
 
-		TS_ASSERT_EQUALS(sofar, expected);
+		TS_ASSERT_EQUALS(first4, key);
 	}
 	
 	void testTwoPartialsOneObject() {
@@ -93,7 +97,7 @@ public:
 	
 	void testFinalizingPartial() {
 		partial->append(key);
-		// Remove the partial object, effectively removing the 'partial'
+		// Finalize the partial object, effectively removing the 'partial'
 		// state from the cache object.
 		partial.reset();
 		

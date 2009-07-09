@@ -49,7 +49,7 @@ CacheAvailability is a new enum complementing the new method objectIsAvailable. 
 
 The Partial class represents such an object, which exists in the cache but has not been completely written yet (for example, a download that is in progress). A Partial is created with the partial method of Cache. If called with an ObjectId of an object that didn't exist before, zeroes are written to the cache for this object, to reserve the space. If called with an ObjectId of an object that *did* exist, that object's status is changed to partial and will no longer be seen by clients only interested in completed objects. If called with an ObjectId of an object that did exist *and* was already marked as partial, the call will abort and return NULL.
 
-When the Partial object is destroyed, the cache object it represents is encrypted, hashed and marked as complete.
+When the Partial object is destroyed, the cache object it represents is hashed and marked as complete.
 
 === Object sizes ===
 
@@ -79,7 +79,7 @@ I'm *very* curious as to the performance of my code compares to a good files-and
 
 Performance
 -------------------
-In short: Insertion and fetching gets faster per byte with bigger objects. Insertion scales [proportionality] with increasing number of objects, while lookup/fetch time remains constant.
+In short: Insertion and fetching gets faster per byte with bigger objects. Insertion scales [proportionality] with increasing number of objects, while lookup/fetch time remains constant (about 1ms, regardless of object count or object size at the ranges I'm measuring).
 
 [Todo: Some pretty graphs]
 

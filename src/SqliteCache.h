@@ -62,8 +62,8 @@ public:
 	// is the highest possible value in bytesToReserve.
 	Partial::Ptr partial(const ObjectId &obj_id, uint64_t bytesToReserve);
 	bool eraseObject(const ObjectId &obj_id);
-	virtual void setMaxSize(uint64_t max_size); 
-	virtual uint64_t getCurrentSize();
+	void setMaxSize(uint64_t max_size); 
+	uint64_t getCurrentSize();
 	
 	time_t accessTimeOfObject(const ObjectId &obj_id);
 	
@@ -86,9 +86,11 @@ protected:
 	
 	/// The amount of space we can free up (which excludes locked objects such
 	/// as partials)
-	virtual uint64_t getRemovableSize();
+	uint64_t getRemovableSize();
 	
 	static vector<uint8_t> hash(const vector<uint8_t> &data);
+	void encrypt(vector<uint8_t>::iterator from,  vector<uint8_t>::iterator to, uint64_t offset = 0);
+	void decrypt(vector<uint8_t>::iterator from,  vector<uint8_t>::iterator to, uint64_t offset = 0);
 	// --- Ivars ---
 protected:
 	const vector<uint8_t> key;

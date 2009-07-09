@@ -1,0 +1,81 @@
+Methodology
+=====================================
+The test creates a new cache, creates N objects at M objects each and inserts them, and then fetches them, one by one by key. Time is measured for total execution, calculated per object, and per byte.
+
+Test is run on my MacBook Pro Intel Core 2 Duo 2.5GHz with 6GB of RAM with tons of other stuff idling in the background (idling around 20%).
+
+
+NOTE: I need to rerun these measures without other crap running... Numbers in tests #2 and #3 are useless. I'm seeing 70% worse performance with writing but according to Instruments, encryption only takes 2% CPU.
+
+
+Key
+-----------
+   500 objs @     100b: create(2.96398s/0.00593s/0.000059s) fetch(0.49415s/0.00099s/0.000010s)
+Obj count          creation time: total/per obj /per byte
+            size of each                                lookup time: total/per obj /per byte
+
+
+Without caching size of cache
+=====================================
+With the code at this stage, I did an SQL lookup of the size of the cache on every write (to make sure we don't overstep bounds). This was a huge bottleneck, from 20% with few objects up to 70% with many objects. 
+
+By size
+    500 objs @     100b: create(2.96398s/0.00593s/0.000059s) fetch(0.49415s/0.00099s/0.000010s)
+    500 objs @    1000b: create(2.30375s/0.00461s/0.000005s) fetch(0.46083s/0.00092s/0.000001s)
+    500 objs @    2000b: create(2.47887s/0.00496s/0.000002s) fetch(0.45943s/0.00092s/0.000000s)
+    500 objs @    5000b: create(4.20368s/0.00841s/0.000002s) fetch(0.42553s/0.00085s/0.000000s)
+    500 objs @   10000b: create(8.77419s/0.01755s/0.000002s) fetch(0.44752s/0.00090s/0.000000s)
+    500 objs @   20000b: create(16.24334s/0.03249s/0.000002s) fetch(0.66163s/0.00132s/0.000000s)
+    500 objs @   50000b: create(23.48019s/0.04696s/0.000001s) fetch(0.65732s/0.00131s/0.000000s)
+By object count
+     10 objs @    1000b: create(0.05313s/0.00531s/0.000005s) fetch(0.00597s/0.00060s/0.000001s)
+    100 objs @    1000b: create(0.48947s/0.00489s/0.000005s) fetch(0.08782s/0.00088s/0.000001s)
+   1000 objs @    1000b: create(4.76029s/0.00476s/0.000005s) fetch(0.94520s/0.00095s/0.000001s)
+   2000 objs @    1000b: create(24.66346s/0.01233s/0.000012s) fetch(1.85021s/0.00093s/0.000001s)
+   5000 objs @    1000b: create(158.65789s/0.03173s/0.000032s) fetch(17.40461s/0.00348s/0.000003s)
+  10000 objs @    1000b: create(496.43337s/0.04964s/0.000050s) fetch(10.10658s/0.00101s/0.000001s)
+
+
+With size caching, without encryption
+=====================================
+In this version, the cache size is fetched only once, and then class then duplicates that state and recalculates it during writes and deletes, removing the bottleneck completely. However, the final requirement of the assignment (on-disk encryption) is still not performed.
+
+By size
+    500 objs @     100b: create(3.53744s/0.00707s/0.000071s) fetch(0.50646s/0.00101s/0.000010s)
+    500 objs @    1000b: create(2.21935s/0.00444s/0.000004s) fetch(0.71377s/0.00143s/0.000001s)
+    500 objs @    2000b: create(2.51754s/0.00504s/0.000003s) fetch(0.42905s/0.00086s/0.000000s)
+    500 objs @    5000b: create(2.52987s/0.00506s/0.000001s) fetch(0.48115s/0.00096s/0.000000s)
+    500 objs @   10000b: create(4.46791s/0.00894s/0.000001s) fetch(1.25112s/0.00250s/0.000000s)
+    500 objs @   20000b: create(5.79954s/0.01160s/0.000001s) fetch(0.53095s/0.00106s/0.000000s)
+    500 objs @   50000b: create(7.09015s/0.01418s/0.000000s) fetch(0.46782s/0.00094s/0.000000s)
+By object count
+     10 objs @    1000b: create(0.03650s/0.00365s/0.000004s) fetch(0.00826s/0.00083s/0.000001s)
+    100 objs @    1000b: create(0.38986s/0.00390s/0.000004s) fetch(0.09046s/0.00090s/0.000001s)
+   1000 objs @    1000b: create(4.08442s/0.00408s/0.000004s) fetch(1.39522s/0.00140s/0.000001s)
+   2000 objs @    1000b: create(8.07890s/0.00404s/0.000004s) fetch(1.88595s/0.00094s/0.000001s)
+   5000 objs @    1000b: create(20.96515s/0.00419s/0.000004s) fetch(4.78415s/0.00096s/0.000001s)
+  10000 objs @    1000b: create(43.79855s/0.00438s/0.000004s) fetch(8.74422s/0.00087s/0.000001s)
+  20000 objs @    1000b: create(88.95607s/0.00445s/0.000004s) fetch(19.06412s/0.00095s/0.000001s)
+  50000 objs @    1000b: create(278.88969s/0.00558s/0.000006s) fetch(55.11095s/0.00110s/0.000001s)
+
+With encryption
+=====================================
+Very rudimentary encryption is added.
+
+By size
+    500 objs @     100b: create(2.74832s/0.00550s/0.000055s) fetch(0.55354s/0.00111s/0.000011s)
+    500 objs @    1000b: create(2.62837s/0.00526s/0.000005s) fetch(0.58473s/0.00117s/0.000001s)
+    500 objs @    2000b: create(2.94705s/0.00589s/0.000003s) fetch(1.26536s/0.00253s/0.000001s)
+    500 objs @    5000b: create(3.85317s/0.00771s/0.000002s) fetch(1.02002s/0.00204s/0.000000s)
+    500 objs @   10000b: create(10.06432s/0.02013s/0.000002s) fetch(1.58078s/0.00316s/0.000000s)
+    500 objs @   20000b: create(10.01808s/0.02004s/0.000001s) fetch(2.24375s/0.00449s/0.000000s)
+    500 objs @   50000b: create(16.01912s/0.03204s/0.000001s) fetch(7.51246s/0.01502s/0.000000s)
+By object count
+     10 objs @    1000b: create(0.03515s/0.00352s/0.000004s) fetch(0.00747s/0.00075s/0.000001s)
+    100 objs @    1000b: create(0.60815s/0.00608s/0.000006s) fetch(0.09235s/0.00092s/0.000001s)
+   1000 objs @    1000b: create(4.99743s/0.00500s/0.000005s) fetch(1.15260s/0.00115s/0.000001s)
+   2000 objs @    1000b: create(13.91995s/0.00696s/0.000007s) fetch(2.54469s/0.00127s/0.000001s)
+   5000 objs @    1000b: create(29.76607s/0.00595s/0.000006s) fetch(6.97593s/0.00140s/0.000001s)
+  10000 objs @    1000b: create(60.82134s/0.00608s/0.000006s) fetch(17.92979s/0.00179s/0.000002s)
+  20000 objs @    1000b: create(118.60378s/0.00593s/0.000006s) fetch(27.92056s/0.00140s/0.000001s)
+  50000 objs @    1000b: create(394.99175s/0.00790s/0.000008s) fetch(80.81457s/0.00162s/0.000002s)

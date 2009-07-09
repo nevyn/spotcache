@@ -94,7 +94,9 @@ read(vector<uint8_t>::iterator destination,
 		 int32_t bytesToRead,
 		 int32_t offset)
 {
+	if(bytesToRead == -1) bytesToRead = size();
 	blob->read(destination, bytesToRead, offset);
+	cache->decrypt(destination, destination+bytesToRead, offset);
 }
 
 void 
@@ -103,7 +105,9 @@ write(const vector<uint8_t>::const_iterator from,
 			const vector<uint8_t>::const_iterator to,
 			int64_t destOffset)
 {
-	blob->write(from, to, destOffset);
+	vector<uint8_t> encrypted(from, to);
+	cache->encrypt(encrypted.begin(), encrypted.end(), destOffset);
+	blob->write(encrypted.begin(), encrypted.end(), destOffset);
 }
 
 uint64_t

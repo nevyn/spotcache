@@ -1,12 +1,13 @@
-- encryption of the data
+√ encryption of the data
 - Save maxSize somehow
 - windows port
+- Performance graphs when all the rest is done.
 √ write design rationale
 	√ what was my old api for partials? why did I abandon it?
 	√ why is my sqlite c++ wrapper so C-ish? (e g SQLITE_ROW)
 	√ why sqlite and not a file store + hash table?
 		X did I actually win anything with sqlite?
-- make sure everything's properly documented (perhaps doxygen it)
+√ make sure everything's properly documented (perhaps doxygen it)
 
 √ use blob functions on resize instead of read/delete/write
 √ prune old data when cache grows too big
