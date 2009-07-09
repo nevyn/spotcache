@@ -1,7 +1,8 @@
-√ encryption of the data
-- Save maxSize somehow
 - windows port
-- Performance graphs when all the rest is done.
+- Performance measures on freshly booted comp and graphs when all the rest is done.
+
+√ encryption of the data
+√ Save maxSize somehow
 √ write design rationale
 	√ what was my old api for partials? why did I abandon it?
 	√ why is my sqlite c++ wrapper so C-ish? (e g SQLITE_ROW)

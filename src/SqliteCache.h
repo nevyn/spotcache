@@ -62,7 +62,7 @@ public:
 	// is the highest possible value in bytesToReserve.
 	Partial::Ptr partial(const ObjectId &obj_id, uint64_t bytesToReserve);
 	bool eraseObject(const ObjectId &obj_id);
-	void setMaxSize(uint64_t max_size); 
+	void setMaxSize(int64_t max_size); 
 	uint64_t getCurrentSize();
 	
 	time_t accessTimeOfObject(const ObjectId &obj_id);
@@ -91,8 +91,12 @@ protected:
 	static vector<uint8_t> hash(const vector<uint8_t> &data);
 	void encrypt(vector<uint8_t>::iterator from,  vector<uint8_t>::iterator to, uint64_t offset = 0);
 	void decrypt(vector<uint8_t>::iterator from,  vector<uint8_t>::iterator to, uint64_t offset = 0);
+	
+	void readMeta();
+	void writeMeta();
+	
 	// --- Ivars ---
-protected:
+private:
 	const vector<uint8_t> key;
 	
 	Sqlite db;
@@ -101,7 +105,7 @@ protected:
 												 sizeRemovableStmt, oldestRemovablesStmt, 
 												 removeByRowidStmt, specificSizeStmt;
 	uint64_t current_size;
-	uint64_t max_size;
+	int64_t max_size;
 };
 
 

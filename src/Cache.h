@@ -104,7 +104,7 @@ public:
 	
 	/// Set a maximum number of bytes that the cache may occupy. 
 	/// If the cache grows larger than this, old objects will be pruned. 
-	virtual void setMaxSize(uint64_t max_size) = 0; 
+	virtual void setMaxSize(int64_t max_size) = 0; 
 	
 	/// Return the current size (in bytes) of the cache 
 	virtual uint64_t getCurrentSize() = 0; 

@@ -22,12 +22,17 @@ static string cacheSchema =
 "  accessed_at int32_t not null" 
 ");";
 
+static string metaSchema = 
+"create table if not exists meta ("
+"  max_size int not null "
+");";
 
 SqliteCache::
 SqliteCache(const string &path, const vector<uint8_t> &encryption_key)
-: db(path), key(encryption_key), max_size(ULONG_LONG_MAX)
+: db(path), key(encryption_key), max_size(LONG_LONG_MAX)
 {
 	db.run(cacheSchema);
+	db.run(metaSchema);
 	hasStmt = db.prepareFirst("select completed from cache where object_id = ?;");
 	readStmt = db.prepareFirst("select data, datahash, completed, datasize from cache where object_id = ?;");
 	writeStmt = db.prepareFirst("insert into cache (object_id, data, datahash, datasize, completed, accessed_at) values (?, ?, ?, ?, ?, ?);");
@@ -41,7 +46,9 @@ SqliteCache(const string &path, const vector<uint8_t> &encryption_key)
 	oldestRemovablesStmt = db.prepareFirst("select rowid, datasize from cache where completed = 1 order by accessed_at asc;");
 	removeByRowidStmt = db.prepareFirst("delete from cache where rowid = ?;");
 	specificSizeStmt = db.prepareFirst("select datasize from cache where object_id = ?");
-
+	
+	readMeta();
+	
 	current_size = -1;
 	getCurrentSize(); // sets current_size
 }
@@ -49,6 +56,7 @@ SqliteCache(const string &path, const vector<uint8_t> &encryption_key)
 SqliteCache::
 ~SqliteCache()
 {
+	writeMeta();
 }
 
 bool
@@ -196,7 +204,7 @@ eraseObject(const ObjectId &obj_id)
 
 void
 SqliteCache::
-setMaxSize(uint64_t max_size_)
+setMaxSize(int64_t max_size_)
 {
 	if(0 == max_size) {
 		db.run("delete from cache;");
@@ -208,6 +216,8 @@ setMaxSize(uint64_t max_size_)
 		ensureMaxUsage(max_size_);
 	
 	max_size = max_size_;
+	
+	writeMeta();
 	
 	// Since we never grow beyond max_size, the sqlite cachesize+freelist will never be
 	// bigger than max_size. If we decrease max_size however, we must vacuum
@@ -342,6 +352,30 @@ ensureMaxUsage(uint64_t maxUsageByteCount)
 	} while(current_size > maxUsageByteCount);
 	
 	return true;
+}
+
+void
+SqliteCache::
+readMeta()
+{
+	Sqlite::Statement::Ptr metaRead = db.prepareFirst("select max_size from meta;");
+	int status = metaRead->step();
+	
+	// Nothing saved? Just return and have it written from ~SqliteCache
+	if(status != SQLITE_ROW)
+		return;
+	
+	setMaxSize(metaRead->int64Column(0));
+}
+
+void
+SqliteCache::
+writeMeta()
+{
+	db.run("delete from meta;");
+	Sqlite::Statement::Ptr metaWrite = db.prepareFirst("insert into meta (max_size) values (?);");
+	metaWrite->bind64(1, max_size);
+	metaWrite->step();
 }
 
 

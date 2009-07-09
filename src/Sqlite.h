@@ -38,6 +38,7 @@ public:
 		void bind(int32_t i, const vector<uint8_t>&) throw(Error); // blob
 		void bind(int32_t i, const string&) throw(Error); // text
 		void bind(int32_t i, int32_t) throw(Error); // int		
+		void bind64(int32_t i, int64_t) throw(Error); // int64
 		// Reserves n bytes of zeroes
 		void bindZeroBlob(int32_t i, int32_t n)  throw(Error); 
 		

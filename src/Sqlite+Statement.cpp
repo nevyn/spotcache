@@ -50,6 +50,14 @@ bind(int32_t i, int32_t v) throw(Error)
 {
 	parent.check(sqlite3_bind_int(stmt, i, v));
 }
+
+void
+Sqlite::Statement::
+bind64(int32_t i, int64_t v) throw(Error)
+{
+	parent.check(sqlite3_bind_int64(stmt, i, v));
+}
+
 void
 Sqlite::Statement::
 bindZeroBlob(int32_t i, int32_t n) throw(Error)

@@ -192,5 +192,14 @@ public:
 		TS_ASSERT( cache->readObject(someKey, value) == false);
 	}
 	
+	void testPersistsMaxSize() {
+		Cache *cache2 = createCache("/tmp/test2.cache", key);
+		cache2->setMaxSize(512);
+		delete cache2;
+		cache2 = createCache("/tmp/test2.cache", key);
+		TS_ASSERT_EQUALS(((SqliteCache*)cache2)->max_size, 512);
+		delete cache2;
+	}
+	
 	
 };
