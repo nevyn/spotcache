@@ -1,4 +1,3 @@
-tests/tests.cpp
 .DS_Store
 build
 SpotCache.xcodeproj/*.mode2v3
