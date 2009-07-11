@@ -5,7 +5,7 @@ SpotCache is a Sqlite3 backed caching class in C++ by [Joachim Bengtsson](mailto
 
 Usage overview
 -------------------
-An Xcode project and Visual Studio solution is included. Sqlite3, a portable stdint (pstdint), the original md5 implementation, and cxxtest are bundled as dependencies, and nothing needs to be installed on a development or production machine to use this code.
+An Xcode 3.1 project and Visual Studio 2008 solution is included. Sqlite3, a portable stdint (pstdint), the original md5 implementation, and cxxtest are bundled as dependencies, and nothing needs to be installed on a development or production machine to use this code.
 
 However, Cxxtest requires python or perl to generate tests.cpp; If you don't change anything you will be fine with the generate in the repository, but to regenerate it you will need to install python or perl if that's not already available on your system. Then, before each build (preferably as an automatic build step, as in the Xcode project), run:
 	python vendor/cxxtest/cxxtestgen.py --error-printer -o tests/tests.cpp \
