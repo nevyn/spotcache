@@ -8,6 +8,8 @@
  */
 #include "Cache.h"
 #include <sys/time.h>
+#include <assert.h>
+
 double getTime() {
 	struct timeval tv;
 	gettimeofday(&tv, NULL);
