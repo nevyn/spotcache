@@ -97,7 +97,9 @@ read(vector<uint8_t>::iterator destination,
 {
 	if(bytesToRead == -1) bytesToRead = size();
 	blob->read(destination, bytesToRead, offset);
+#if USE_ONDISK_ENCRYPTION 
 	cache->decrypt(destination, destination+bytesToRead, offset);
+#endif
 }
 
 void 
@@ -106,9 +108,13 @@ write(const vector<uint8_t>::const_iterator from,
 			const vector<uint8_t>::const_iterator to,
 			int64_t destOffset)
 {
+#if USE_ONDISK_ENCRYPTION
 	vector<uint8_t> encrypted(from, to);
 	cache->encrypt(encrypted.begin(), encrypted.end(), destOffset);
 	blob->write(encrypted.begin(), encrypted.end(), destOffset);
+#else
+	blob->write(from, to, destOffset);
+#endif
 }
 
 uint64_t

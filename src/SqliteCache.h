@@ -10,6 +10,9 @@
  *
  */
 
+// Set this to 0 for better performance
+#define USE_ONDISK_ENCRYPTION 1
+
 #include "Cache.h"
 #include "Sqlite.h"
 #include <stdio.h>

@@ -11,7 +11,6 @@
 		051465740FF5D4DD0011052B /* Cache.cc in Sources */ = {isa = PBXBuildFile; fileRef = 050330270FD4663F0034612D /* Cache.cc */; };
 		051465750FF5D4DD0011052B /* SqliteCache.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05FFEB5B0FD6F269007558B2 /* SqliteCache.cpp */; };
 		051465760FF5D4DD0011052B /* Sqlite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 054195750FD87537009BA8C6 /* Sqlite.cpp */; };
-		0514657A0FF5D4E80011052B /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 05FFEB560FD6F222007558B2 /* libsqlite3.dylib */; };
 		057E26381008E6AA002F711B /* md5c.c in Sources */ = {isa = PBXBuildFile; fileRef = 057E26371008E6AA002F711B /* md5c.c */; };
 		057E26391008E6AA002F711B /* md5c.c in Sources */ = {isa = PBXBuildFile; fileRef = 057E26371008E6AA002F711B /* md5c.c */; };
 		05C7AD66100249DC00349FC6 /* SqliteCache+Partial.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05C7AD65100249DC00349FC6 /* SqliteCache+Partial.cpp */; };
@@ -23,8 +22,9 @@
 		05C7B1361003D36900349FC6 /* Sqlite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 054195750FD87537009BA8C6 /* Sqlite.cpp */; };
 		05C7B1371003D36900349FC6 /* Sqlite+Statement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05C7AE43100288A400349FC6 /* Sqlite+Statement.cpp */; };
 		05C7B1381003D36900349FC6 /* Sqlite+Blob.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05C7AE45100288BC00349FC6 /* Sqlite+Blob.cpp */; };
-		05C7B13A1003D36900349FC6 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 05FFEB560FD6F222007558B2 /* libsqlite3.dylib */; };
 		05C7B13F1003D38C00349FC6 /* performancetest.cc in Sources */ = {isa = PBXBuildFile; fileRef = 05C7B13E1003D38C00349FC6 /* performancetest.cc */; };
+		05E0E7261008F3AA0072B8BB /* sqlite3.c in Sources */ = {isa = PBXBuildFile; fileRef = 05E0E7251008F3AA0072B8BB /* sqlite3.c */; };
+		05E0E7271008F3AA0072B8BB /* sqlite3.c in Sources */ = {isa = PBXBuildFile; fileRef = 05E0E7251008F3AA0072B8BB /* sqlite3.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -47,8 +47,8 @@
 		05C7B12F1003D35B00349FC6 /* PerformanceTest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = PerformanceTest; sourceTree = BUILT_PRODUCTS_DIR; };
 		05C7B13E1003D38C00349FC6 /* performancetest.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = performancetest.cc; sourceTree = "<group>"; };
 		05C7B1731003DF1200349FC6 /* index.markdown */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = index.markdown; path = docs/index.markdown; sourceTree = "<group>"; };
+		05E0E7251008F3AA0072B8BB /* sqlite3.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = sqlite3.c; path = vendor/sqlite/sqlite3.c; sourceTree = "<group>"; };
 		05EC2FFF0FFB8FFB0030DCF9 /* todo.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = todo.txt; sourceTree = "<group>"; };
-		05FFEB560FD6F222007558B2 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = /usr/lib/libsqlite3.dylib; sourceTree = "<absolute>"; };
 		05FFEB5A0FD6F269007558B2 /* SqliteCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SqliteCache.h; sourceTree = "<group>"; };
 		05FFEB5B0FD6F269007558B2 /* SqliteCache.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SqliteCache.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -58,7 +58,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0514657A0FF5D4E80011052B /* libsqlite3.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -66,7 +65,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				05C7B13A1003D36900349FC6 /* libsqlite3.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -123,9 +121,9 @@
 			isa = PBXGroup;
 			children = (
 				057E26261008D828002F711B /* pstdint.h */,
+				05E0E7251008F3AA0072B8BB /* sqlite3.c */,
 				057E26341008E6AA002F711B /* md5 */,
 				0514653D0FF5D3510011052B /* cxxtest */,
-				05FFEB560FD6F222007558B2 /* libsqlite3.dylib */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -236,6 +234,7 @@
 				05C7AE44100288A400349FC6 /* Sqlite+Statement.cpp in Sources */,
 				05C7AE46100288BC00349FC6 /* Sqlite+Blob.cpp in Sources */,
 				057E26381008E6AA002F711B /* md5c.c in Sources */,
+				05E0E7261008F3AA0072B8BB /* sqlite3.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -251,6 +250,7 @@
 				05C7B1381003D36900349FC6 /* Sqlite+Blob.cpp in Sources */,
 				05C7B13F1003D38C00349FC6 /* performancetest.cc in Sources */,
 				057E26391008E6AA002F711B /* md5c.c in Sources */,
+				05E0E7271008F3AA0072B8BB /* sqlite3.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

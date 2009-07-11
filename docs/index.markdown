@@ -1,15 +1,21 @@
 SpotCache
 ========================
 
-SpotCache is a Sqlite3 backed caching class in C++ by [Joachim Bengtsson](mailto:joachimb@gmail.com) as recruitment programming assignment for Spotify. I realize you might want to have tested my problem solving abolities, or my algorithmic knowledge. I chose the pragmatic approach and went for a problem solving approach; my implementation is thus probably a poor measure of the latter. I'll reimplement it if that's what you were really interested in.
+SpotCache is a Sqlite3 backed caching class in C++ by [Joachim Bengtsson](mailto:joachimb@gmail.com) as recruitment programming assignment for Spotify. I realize you might want to have tested my problem solving abilities, or my algorithmic knowledge. I chose the pragmatic approach and went for a problem solving approach; my implementation is thus probably a poor measure of the latter. I'll reimplement it if that's what you were really interested in.
 
 Usage overview
 -------------------
-An Xcode project and Visual Studio solution is included. If you want to use SpotCache outside of these projects, you will need to link to libsqlite3 and libcrypto. Cxxtest requires python or perl to generate tests.cpp; If you don't change anything you will be fine with the one in the repository, but to regenerate it you will need to install python or perl if that's not already available on your system.
+An Xcode project and Visual Studio solution is included. Sqlite3, a portable stdint (pstdint), the original md5 implementation, and cxxtest are bundled as dependencies, and nothing needs to be installed on a development or production machine to use this code.
+
+However, Cxxtest requires python or perl to generate tests.cpp; If you don't change anything you will be fine with the generate in the repository, but to regenerate it you will need to install python or perl if that's not already available on your system. Then, before each build (preferably as an automatic build step, as in the Xcode project), run:
+	python vendor/cxxtest/cxxtestgen.py --error-printer -o tests/tests.cpp \
+	tests/SqliteDbSuite.h tests/SqliteTableSuite.h tests/SqliteCacheSuite.h
+
+
 
 Sample usage:
 
-	Cache *cache = createCache("/tmp/performance.cache", vs("my key"));
+	Cache *cache = createCache("/tmp/test.cache", vs("my key"));
 	
 	string key = "my object.png";
 	vector<uint8_t> value = ...;
@@ -45,7 +51,7 @@ I have made changes in Cache.h from your original version. However, any client u
 
 ObjectId is a class instead of an enum to make it easier to create from e g a string.
 
-CacheAvailability is a new enum complementing the new method objectIsAvailable. The two first values of CacheAvailability are analogous to the return value from hasObject; the third value, ObjectPartiallyCached indicates that an object exists in the cache but is incomplete and should be treated as such. readObject will hapilly return such an object even though it has not ben fully written yet.
+CacheAvailability is a new enum complementing the new method objectIsAvailable. The two first values of CacheAvailability are analogous to the return value from hasObject; the third value, ObjectPartiallyCached indicates that an object exists in the cache but is incomplete and should be treated as such. readObject will  return such an object even though it has not ben fully written yet.
 
 The Partial class represents such an object, which exists in the cache but has not been completely written yet (for example, a download that is in progress). A Partial is created with the partial method of Cache. If called with an ObjectId of an object that didn't exist before, zeroes are written to the cache for this object, to reserve the space. If called with an ObjectId of an object that *did* exist, that object's status is changed to partial and will no longer be seen by clients only interested in completed objects. If called with an ObjectId of an object that did exist *and* was already marked as partial, the call will abort and return NULL.
 
@@ -79,7 +85,4 @@ I'm *very* curious as to the performance of my code compares to a good files-and
 
 Performance
 -------------------
-In short: Insertion and fetching gets faster per byte with bigger objects. Insertion scales [proportionality] with increasing number of objects, while lookup/fetch time remains constant (about 1ms, regardless of object count or object size at the ranges I'm measuring).
-
-[Todo: Some pretty graphs]
-
+See "Performance measurements.txt"

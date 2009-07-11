@@ -54,7 +54,7 @@ void perftest(int objCount, int objSize) {
 		double fetchTimePerObj = timeToFetch/objCount;
 		double fetchTimePerByte = fetchTimePerObj/objSize;
 #if 1
-		printf("%7d objs @ %7db: create(%.5fs/%.5fs/%fs) fetch(%.5fs/%.5fs/%fs)\n", 
+		printf("%7d objs @ %7db: create(%9.5fs/%9.5fs/%14.10fs) fetch(%9.5fs/%9.5fs/%14.10fs)\n", 
 					 objCount, objSize, 
 					 timeToCreate, creationTimePerObj, creationTimePerByte,
 					 timeToFetch, fetchTimePerObj, fetchTimePerByte);

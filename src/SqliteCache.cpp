@@ -99,7 +99,6 @@ readObject(const ObjectId &obj_id, vector<uint8_t> &result)
 		return false;
 	
 	readStmt->column(0, result);
-	int64_t size = readStmt->int64Column(3);
 	
 	bool completed = (bool)readStmt->intColumn(2);
 	if(completed) {
@@ -109,10 +108,12 @@ readObject(const ObjectId &obj_id, vector<uint8_t> &result)
 		vector<uint8_t> currentHash = SqliteCache::hash(result);
 		
 		if(currentHash != recordedHash)
-			return false;		
+			return false;
 	}
-	
+#if USE_ONDISK_ENCRYPTION
+	int64_t size = readStmt->int64Column(3);
 	decrypt(result.begin(), result.begin() + size);
+#endif
 	
 	
 	Sqlite::Statement::Resetter resetTouch(*touchStmt);
@@ -284,23 +285,27 @@ void
 SqliteCache::
  encrypt(vector<uint8_t>::iterator from,  vector<uint8_t>::iterator to, uint64_t offset)
 {
+#if USE_ONDISK_ENCRYPTION
 	for(vector<uint8_t>::iterator it = from;
 			it != to;
 			it++, offset++)
 	{
 		*it += key[offset % key.size()];
 	}
+#endif
 }
 void
 SqliteCache::
 decrypt(vector<uint8_t>::iterator from,  vector<uint8_t>::iterator to, uint64_t offset)
 {
+#if USE_ONDISK_ENCRYPTION
 	for(vector<uint8_t>::iterator it = from;
 			it != to;
 			it++, offset++)
 	{
 		*it -= key[offset % key.size()];
 	}
+#endif
 }
 
 
