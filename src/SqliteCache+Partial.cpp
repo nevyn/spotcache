@@ -9,6 +9,7 @@
 
 #include "SqliteCache.h"
 #include <stdexcept>
+#include <time.h>
 
 SqliteCache::SCPartial::
 SCPartial() : cache(NULL), obj_id(""){

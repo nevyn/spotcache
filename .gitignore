@@ -2,3 +2,8 @@
 build
 SpotCache.xcodeproj/*.mode2v3
 SpotCache.xcodeproj/*.pbxuser
+windows/Debug
+windows/Release
+windows/SpotCache.ncb
+windows/SpotCache.suo
+windows/*.user

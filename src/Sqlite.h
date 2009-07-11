@@ -14,7 +14,7 @@ using std::string;
 using std::vector;
 #include <stdexcept>
 #include <memory>
-
+#include "pstdint.h"
 #include <sqlite3.h>
 
 class Sqlite {

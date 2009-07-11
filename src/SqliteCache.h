@@ -13,7 +13,7 @@
 #include "Cache.h"
 #include "Sqlite.h"
 #include <stdio.h>
-#include <stdint.h>
+#include "pstdint.h"
 
 class SqliteCache : public Cache {
 	friend Cache *createCache(const string &path, const vector<uint8_t> &encryption_key); 

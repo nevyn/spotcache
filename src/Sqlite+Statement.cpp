@@ -67,7 +67,7 @@ bindZeroBlob(int32_t i, int32_t n) throw(Error)
 
 
 
-int
+int32_t
 Sqlite::Statement::
 step(int32_t tryCount)
 {
@@ -97,7 +97,7 @@ hasData()
 	return lastStepStatus == SQLITE_ROW;
 }
 
-int
+int32_t
 Sqlite::Statement::
 intColumn(int32_t i)
 {
@@ -143,7 +143,7 @@ column(int32_t i, vector<uint8_t> &v)
 	std::copy(data, data+datalen, v.begin());
 }
 
-int
+int32_t
 Sqlite::Statement::
 byteLength(int32_t i)
 {

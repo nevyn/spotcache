@@ -9,6 +9,8 @@
 #include <vector>
 #include <string>
 #include <memory>
+#include "pstdint.h"
+
 using std::vector;
 using std::string;
 
