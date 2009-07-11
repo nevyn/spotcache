@@ -13,8 +13,8 @@ public:
 	Sqlite *db;
 	virtual void setUp() {
 		db = new Sqlite("test.sqlite");
-		db->run("create table foo(i int);");
-		db->run("create table bar(bytes blob);");
+		db->run("create table if not exists foo(i int);");
+		db->run("create table if not exists bar(bytes blob);");
 	}
 	virtual void tearDown() {
 		delete db;

@@ -11,8 +11,9 @@
 		051465740FF5D4DD0011052B /* Cache.cc in Sources */ = {isa = PBXBuildFile; fileRef = 050330270FD4663F0034612D /* Cache.cc */; };
 		051465750FF5D4DD0011052B /* SqliteCache.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05FFEB5B0FD6F269007558B2 /* SqliteCache.cpp */; };
 		051465760FF5D4DD0011052B /* Sqlite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 054195750FD87537009BA8C6 /* Sqlite.cpp */; };
-		051465790FF5D4E80011052B /* libcrypto.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 054195510FD869F2009BA8C6 /* libcrypto.dylib */; };
 		0514657A0FF5D4E80011052B /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 05FFEB560FD6F222007558B2 /* libsqlite3.dylib */; };
+		057E26381008E6AA002F711B /* md5c.c in Sources */ = {isa = PBXBuildFile; fileRef = 057E26371008E6AA002F711B /* md5c.c */; };
+		057E26391008E6AA002F711B /* md5c.c in Sources */ = {isa = PBXBuildFile; fileRef = 057E26371008E6AA002F711B /* md5c.c */; };
 		05C7AD66100249DC00349FC6 /* SqliteCache+Partial.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05C7AD65100249DC00349FC6 /* SqliteCache+Partial.cpp */; };
 		05C7AE44100288A400349FC6 /* Sqlite+Statement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05C7AE43100288A400349FC6 /* Sqlite+Statement.cpp */; };
 		05C7AE46100288BC00349FC6 /* Sqlite+Blob.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05C7AE45100288BC00349FC6 /* Sqlite+Blob.cpp */; };
@@ -22,7 +23,6 @@
 		05C7B1361003D36900349FC6 /* Sqlite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 054195750FD87537009BA8C6 /* Sqlite.cpp */; };
 		05C7B1371003D36900349FC6 /* Sqlite+Statement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05C7AE43100288A400349FC6 /* Sqlite+Statement.cpp */; };
 		05C7B1381003D36900349FC6 /* Sqlite+Blob.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05C7AE45100288BC00349FC6 /* Sqlite+Blob.cpp */; };
-		05C7B1391003D36900349FC6 /* libcrypto.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 054195510FD869F2009BA8C6 /* libcrypto.dylib */; };
 		05C7B13A1003D36900349FC6 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 05FFEB560FD6F222007558B2 /* libsqlite3.dylib */; };
 		05C7B13F1003D38C00349FC6 /* performancetest.cc in Sources */ = {isa = PBXBuildFile; fileRef = 05C7B13E1003D38C00349FC6 /* performancetest.cc */; };
 /* End PBXBuildFile section */
@@ -35,9 +35,12 @@
 		051465680FF5D4800011052B /* tests.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tests.cpp; sourceTree = "<group>"; };
 		051465FF0FF5E0F60011052B /* SqliteTableSuite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SqliteTableSuite.h; sourceTree = "<group>"; };
 		0514662F0FF5EFD60011052B /* SqliteCacheSuite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SqliteCacheSuite.h; sourceTree = "<group>"; };
-		054195510FD869F2009BA8C6 /* libcrypto.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcrypto.dylib; path = /usr/lib/libcrypto.dylib; sourceTree = "<absolute>"; };
 		054195740FD87537009BA8C6 /* Sqlite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Sqlite.h; sourceTree = "<group>"; };
 		054195750FD87537009BA8C6 /* Sqlite.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Sqlite.cpp; sourceTree = "<group>"; };
+		057E26261008D828002F711B /* pstdint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = pstdint.h; path = vendor/pstdint.h; sourceTree = "<group>"; };
+		057E26351008E6AA002F711B /* global.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = global.h; sourceTree = "<group>"; };
+		057E26361008E6AA002F711B /* md5.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = md5.h; sourceTree = "<group>"; };
+		057E26371008E6AA002F711B /* md5c.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = md5c.c; sourceTree = "<group>"; };
 		05C7AD65100249DC00349FC6 /* SqliteCache+Partial.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "SqliteCache+Partial.cpp"; sourceTree = "<group>"; };
 		05C7AE43100288A400349FC6 /* Sqlite+Statement.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "Sqlite+Statement.cpp"; sourceTree = "<group>"; };
 		05C7AE45100288BC00349FC6 /* Sqlite+Blob.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "Sqlite+Blob.cpp"; sourceTree = "<group>"; };
@@ -55,7 +58,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				051465790FF5D4E80011052B /* libcrypto.dylib in Frameworks */,
 				0514657A0FF5D4E80011052B /* libsqlite3.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -64,7 +66,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				05C7B1391003D36900349FC6 /* libcrypto.dylib in Frameworks */,
 				05C7B13A1003D36900349FC6 /* libsqlite3.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -107,11 +108,23 @@
 			name = cxxtest;
 			sourceTree = "<group>";
 		};
+		057E26341008E6AA002F711B /* md5 */ = {
+			isa = PBXGroup;
+			children = (
+				057E26351008E6AA002F711B /* global.h */,
+				057E26361008E6AA002F711B /* md5.h */,
+				057E26371008E6AA002F711B /* md5c.c */,
+			);
+			name = md5;
+			path = vendor/md5;
+			sourceTree = "<group>";
+		};
 		05FFEB550FD6F215007558B2 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				057E26261008D828002F711B /* pstdint.h */,
+				057E26341008E6AA002F711B /* md5 */,
 				0514653D0FF5D3510011052B /* cxxtest */,
-				054195510FD869F2009BA8C6 /* libcrypto.dylib */,
 				05FFEB560FD6F222007558B2 /* libsqlite3.dylib */,
 			);
 			name = Libraries;
@@ -222,6 +235,7 @@
 				05C7AD66100249DC00349FC6 /* SqliteCache+Partial.cpp in Sources */,
 				05C7AE44100288A400349FC6 /* Sqlite+Statement.cpp in Sources */,
 				05C7AE46100288BC00349FC6 /* Sqlite+Blob.cpp in Sources */,
+				057E26381008E6AA002F711B /* md5c.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -236,6 +250,7 @@
 				05C7B1371003D36900349FC6 /* Sqlite+Statement.cpp in Sources */,
 				05C7B1381003D36900349FC6 /* Sqlite+Blob.cpp in Sources */,
 				05C7B13F1003D38C00349FC6 /* performancetest.cc in Sources */,
+				057E26391008E6AA002F711B /* md5c.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

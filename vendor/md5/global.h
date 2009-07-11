@@ -1,3 +1,6 @@
+#ifndef __GLOBAL__H
+#define __GLOBAL__H
+
 /* GLOBAL.H - RSAREF types and constants
  */
 
@@ -30,3 +33,4 @@ If using PROTOTYPES, then PROTO_LIST returns the list, otherwise it
 #define PROTO_LIST(list) ()
 #endif
 
+#endif

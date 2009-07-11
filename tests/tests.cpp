@@ -24,7 +24,7 @@ CxxTest::StaticSuiteDescription suiteDescription_CreateDbSuite( "tests/SqliteDbS
 
 static class TestDescription_CreateDbSuite_testCreateTable : public CxxTest::RealTestDescription {
 public:
- TestDescription_CreateDbSuite_testCreateTable() : CxxTest::RealTestDescription( Tests_CreateDbSuite, suiteDescription_CreateDbSuite, 24, "testCreateTable" ) {}
+ TestDescription_CreateDbSuite_testCreateTable() : CxxTest::RealTestDescription( Tests_CreateDbSuite, suiteDescription_CreateDbSuite, 28, "testCreateTable" ) {}
  void runTest() { suite_CreateDbSuite.testCreateTable(); }
 } testDescription_CreateDbSuite_testCreateTable;
 
@@ -37,13 +37,13 @@ CxxTest::StaticSuiteDescription suiteDescription_CreateTableSuite( "tests/Sqlite
 
 static class TestDescription_CreateTableSuite_testInsert : public CxxTest::RealTestDescription {
 public:
- TestDescription_CreateTableSuite_testInsert() : CxxTest::RealTestDescription( Tests_CreateTableSuite, suiteDescription_CreateTableSuite, 24, "testInsert" ) {}
+ TestDescription_CreateTableSuite_testInsert() : CxxTest::RealTestDescription( Tests_CreateTableSuite, suiteDescription_CreateTableSuite, 28, "testInsert" ) {}
  void runTest() { suite_CreateTableSuite.testInsert(); }
 } testDescription_CreateTableSuite_testInsert;
 
 static class TestDescription_CreateTableSuite_testBlob : public CxxTest::RealTestDescription {
 public:
- TestDescription_CreateTableSuite_testBlob() : CxxTest::RealTestDescription( Tests_CreateTableSuite, suiteDescription_CreateTableSuite, 60, "testBlob" ) {}
+ TestDescription_CreateTableSuite_testBlob() : CxxTest::RealTestDescription( Tests_CreateTableSuite, suiteDescription_CreateTableSuite, 64, "testBlob" ) {}
  void runTest() { suite_CreateTableSuite.testBlob(); }
 } testDescription_CreateTableSuite_testBlob;
 
