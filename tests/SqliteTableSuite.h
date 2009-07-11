@@ -12,13 +12,17 @@ class CreateTableSuite : public CxxTest::TestSuite {
 public:
 	Sqlite *db;
 	virtual void setUp() {
-		db = new Sqlite("/test.sqlite");
+		db = new Sqlite("test.sqlite");
 		db->run("create table foo(i int);");
 		db->run("create table bar(bytes blob);");
 	}
 	virtual void tearDown() {
 		delete db;
-		system("rm -f /test.sqlite");
+#ifdef WIN32
+		system("del test.sqlite");
+#else
+		system("rm -f test.sqlite");
+#endif
 	}
 	
 	void testInsert( void )

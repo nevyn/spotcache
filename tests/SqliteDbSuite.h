@@ -14,11 +14,15 @@ class CreateDbSuite : public CxxTest::TestSuite {
 public:
 	Sqlite *db;
 	virtual void setUp() {
-		db = new Sqlite("/test.sqlite");
+		db = new Sqlite("test.sqlite");
 	}
 	virtual void tearDown() {
 		delete db;
+#ifdef WIN32
+		system("del test.sqlite");
+#else
 		system("rm -f /test.sqlite");
+#endif
 	}
 	
 	void testCreateTable( void )

@@ -30,7 +30,7 @@ public:
 	Cache *cache;
 
 	SqliteCacheSuite() : key("1234") {
-		cache = createCache("/tmp/test.cache", key);
+		cache = createCache("test.cache", key);
 		cache->setMaxSize(0); // empty it
 		cache->setMaxSize(UINT_MAX);
 	}
@@ -180,7 +180,7 @@ public:
 		Cache::ObjectId realKey = ((SqliteCache*)cache)->keyify(someKey);
 		
 		{
-			Sqlite store("/tmp/test.cache");
+			Sqlite store("test.cache");
 			Sqlite::Statement::Ptr corruptStmt = store.prepareFirst("update cache set data = ? where object_id = ?;");
 			corruptStmt->bind(1, "lol");
 			corruptStmt->bind(2, realKey);
@@ -193,10 +193,10 @@ public:
 	}
 	
 	void testPersistsMaxSize() {
-		Cache *cache2 = createCache("/tmp/test2.cache", key);
+		Cache *cache2 = createCache("test2.cache", key);
 		cache2->setMaxSize(512);
 		delete cache2;
-		cache2 = createCache("/tmp/test2.cache", key);
+		cache2 = createCache("test2.cache", key);
 		TS_ASSERT_EQUALS(((SqliteCache*)cache2)->max_size, 512);
 		delete cache2;
 	}

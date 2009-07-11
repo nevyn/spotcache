@@ -8,8 +8,11 @@
  */
 
 #include "SqliteCache.h"
-#include <openssl/md5.h>
+extern "C" {
+#include "md5.h"
+}
 #include <algorithm>
+#include <time.h>
 
 /// Schema
 static string cacheSchema = 
@@ -98,7 +101,7 @@ readObject(const ObjectId &obj_id, vector<uint8_t> &result)
 	readStmt->column(0, result);
 	int64_t size = readStmt->int64Column(3);
 	
-	bool completed = readStmt->intColumn(2);
+	bool completed = (bool)readStmt->intColumn(2);
 	if(completed) {
 		vector<uint8_t> recordedHash;
 		readStmt->column(1, recordedHash);
@@ -131,6 +134,8 @@ writeObject(const ObjectId &obj_id,
 	return true;
 }
 
+static const int md5_digest_length = 16;
+
 ::Cache::Partial::Ptr
 SqliteCache::
 partial(const ObjectId &obj_id, uint64_t bytesToReserve)
@@ -162,7 +167,7 @@ partial(const ObjectId &obj_id, uint64_t bytesToReserve)
 		vector<uint8_t> nothing;
 		writeStmt->bind(1, keyify(obj_id));
 		writeStmt->bindZeroBlob(2, bytesToReserve);
-		writeStmt->bindZeroBlob(3, MD5_DIGEST_LENGTH);
+		writeStmt->bindZeroBlob(3, md5_digest_length);
 		writeStmt->bind(4, bytesToReserve);
 		writeStmt->bind(5, false);
 		writeStmt->bind(6, time(NULL));
@@ -255,7 +260,7 @@ accessTimeOfObject(const ObjectId &obj_id)
 	timeStmt->bind(1, keyify(obj_id));
 	timeStmt->step();
 	
-	assert(timeStmt->hasData());
+	//assert(timeStmt->hasData());
 	return timeStmt->intColumn(0);
 }
 
@@ -266,10 +271,11 @@ vector<uint8_t>
 SqliteCache::
 hash(const vector<uint8_t> &data)
 {
-	vector<uint8_t> hashed(MD5_DIGEST_LENGTH);
-	MD5(&(*data.begin()),
-			data.size(),
-			&(*hashed.begin()));
+	vector<uint8_t> hashed(md5_digest_length);
+	MD5_CTX ctx;
+	MD5Init(&ctx);
+	MD5Update(&ctx, const_cast<uint8_t*>(&(*data.begin())), data.size());
+	MD5Final(&(*hashed.begin()), &ctx);
 	return hashed;
 }
 

@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;C:\Users\Joachim Bengtsson\My Projects\SpotCache\vendor\cxxtest\cxxtest&quot;;&quot;C:\Users\Joachim Bengtsson\My Projects\SpotCache\vendor&quot;;&quot;C:\Users\Joachim Bengtsson\My Projects\SpotCache\vendor\sqlite&quot;"
+				AdditionalIncludeDirectories="&quot;C:\Users\Joachim Bengtsson\My Projects\SpotCache\vendor\cxxtest&quot;;&quot;C:\Users\Joachim Bengtsson\My Projects\SpotCache\vendor&quot;;&quot;C:\Users\Joachim Bengtsson\My Projects\SpotCache\vendor\sqlite&quot;;&quot;C:\Users\Joachim Bengtsson\My Projects\SpotCache\vendor\md5&quot;;&quot;C:\Users\Joachim Bengtsson\My Projects\SpotCache&quot;;&quot;C:\Users\Joachim Bengtsson\My Projects\SpotCache\src&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -239,6 +239,18 @@
 		<Filter
 			Name="Vendor"
 			>
+			<File
+				RelativePath="..\vendor\md5\global.h"
+				>
+			</File>
+			<File
+				RelativePath="..\vendor\md5\md5.h"
+				>
+			</File>
+			<File
+				RelativePath="..\vendor\md5\md5c.c"
+				>
+			</File>
 			<File
 				RelativePath="..\vendor\pstdint.h"
 				>
