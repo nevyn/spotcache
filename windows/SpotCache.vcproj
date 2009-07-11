@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;C:\Users\Joachim Bengtsson\My Projects\SpotCache\vendor\cxxtest&quot;;&quot;C:\Users\Joachim Bengtsson\My Projects\SpotCache\vendor&quot;;&quot;C:\Users\Joachim Bengtsson\My Projects\SpotCache\vendor\sqlite&quot;;&quot;C:\Users\Joachim Bengtsson\My Projects\SpotCache\vendor\md5&quot;;&quot;C:\Users\Joachim Bengtsson\My Projects\SpotCache&quot;;&quot;C:\Users\Joachim Bengtsson\My Projects\SpotCache\src&quot;"
+				AdditionalIncludeDirectories="&quot;$(ProjectDir)\..\vendor\cxxtest&quot;;&quot;$(ProjectDir)\..\vendor&quot;;&quot;$(ProjectDir)\..\vendor\sqlite&quot;;&quot;$(ProjectDir)\..\vendor\md5&quot;;&quot;$(ProjectDir)\..&quot;;&quot;$(ProjectDir)\..\src&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
