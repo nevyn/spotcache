@@ -377,7 +377,7 @@ readMeta()
 	if(status != SQLITE_ROW)
 		return;
 	
-	setMaxSize(metaRead->int64Column(0));
+	max_size = metaRead->int64Column(0));
 }
 
 void
