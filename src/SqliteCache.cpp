@@ -218,18 +218,19 @@ setMaxSize(int64_t max_size_)
 	}
 	
 	// If we're shrinking, we might need to free up some space
-	if(max_size_ < max_size)
+	if(max_size_ < max_size) {
 		ensureMaxUsage(max_size_);
-	
+		
+		// Since we never grow beyond max_size, the sqlite cachesize+freelist will never be
+		// bigger than max_size. If we decrease max_size however, we must vacuum
+		// to make the cachesize+freelist smaller than max_size.
+		// By not autovacuuming, we allow sqlite to optimize the free space
+		db.run("VACUUM;");		
+	}
+		
 	max_size = max_size_;
 	
 	writeMeta();
-	
-	// Since we never grow beyond max_size, the sqlite cachesize+freelist will never be
-	// bigger than max_size. If we decrease max_size however, we must vacuum
-	// to make the cachesize+freelist smaller than max_size.
-	// By not autovacuuming, we allow sqlite to optimize the free space
-	db.run("VACUUM;");
 }
 
 uint64_t
